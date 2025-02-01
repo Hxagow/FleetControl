@@ -1,0 +1,5 @@
+<div class="container">
+    <h1>Welcome {{ user.email }}</h1>
+    <a href="{% url 'account_logout' %}">Logout</a>
+    <a href="{% url 'account_change_password' %}">Change Password</a>
+</div>

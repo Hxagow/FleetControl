@@ -73,11 +73,28 @@ WSGI_APPLICATION = 'fleet_control.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+from decouple import config
+
+print(config('DB_NAME'))
+
 DATABASES = {
+
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+        'NAME': config('DB_NAME'),
+
+        'USER': config('DB_USER'),
+
+        'PASSWORD': config('DB_PASSWORD'),
+
+        'HOST': config('DB_HOST', default='localhost'),
+
+        'PORT': config('DB_PORT', default='5432'),
+
     }
+
 }
 
 
@@ -105,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Zurich'
 
 USE_I18N = True
 

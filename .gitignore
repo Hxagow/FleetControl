@@ -1,0 +1,68 @@
+# Python/Django
+*.py[cod]
+__pycache__/
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+
+# Environnement virtuel
+.env
+.venv
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Frontend
+node_modules/
+/static/
+.DS_Store
+*.css.map
+*.js.map
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Cache
+*.pyc
+.cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# AWS
+.aws/
+
+# Divers
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

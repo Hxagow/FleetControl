@@ -24,6 +24,8 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     # for CairoSVG
     libcairo2 \
+    # for basic networking tools
+    netcat \
     # other
     gcc \
     && rm -rf /var/lib/apt/lists/*
@@ -56,6 +58,11 @@ ARG PROJ_NAME="cfehome"
 # the container starts and the database is available
 RUN printf "#!/bin/bash\n" > ./paracord_runner.sh && \
     printf "RUN_PORT=\"\${PORT:-8000}\"\n\n" >> ./paracord_runner.sh && \
+    printf "echo \"Waiting for postgres...\"\n" >> ./paracord_runner.sh && \
+    printf "while ! nc -z \$POSTGRES_HOST \${POSTGRES_PORT:-5432}; do\n" >> ./paracord_runner.sh && \
+    printf "  sleep 0.1\n" >> ./paracord_runner.sh && \
+    printf "done\n" >> ./paracord_runner.sh && \
+    printf "echo \"PostgreSQL started\"\n\n" >> ./paracord_runner.sh && \
     printf "python manage.py migrate --no-input\n" >> ./paracord_runner.sh && \
     printf "gunicorn ${PROJ_NAME}.wsgi:application --bind \"0.0.0.0:\$RUN_PORT\"\n" >> ./paracord_runner.sh
 

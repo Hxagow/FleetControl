@@ -21,5 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls'), name='accounts'),
     
-    path('success/', TemplateView.as_view(template_name='success.html'), name='success'),
+    path('', include('subscriptions.urls')),
 ]

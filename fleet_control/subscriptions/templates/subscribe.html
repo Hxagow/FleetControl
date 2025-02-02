@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Subscribe to a cool new product</title>
+    <script src="https://js.stripe.com/v3/"></script>
+  </head>
+  <body>
+    <header>
+        <p>
+            Logged in as {{ request.user.email }}
+        </p>
+    </header>
+    <section>
+
+<!--        Show product details-->
+      <div class="product">
+        <div class="description">
+          <h3>Monthly subscription</h3>
+          <h5>399.90 CHF / month</h5>
+        </div>
+      </div>
+
+<!--        Go to checkout button -->
+      <form class="checkout-form" action="{%  url 'create-checkout-session' %}" method="POST">
+          {% csrf_token %}
+
+        <!-- Add a hidden field with the lookup_key of your stripe Price -->
+        <input type="hidden" name="price_lookup_key" value="standard_monthly" />
+        <button id="checkout-and-portal-button" type="submit">Checkout</button>
+      </form>
+    </section>
+  </body>
+</html>

@@ -13,7 +13,7 @@ from django.contrib.auth import get_user_model
 
 
 DOMAIN = "http://localhost:8000"  # Move this to your settings file or environment variable for production.
-stripe.api_key = config('STRIPE_SECRET_KEY')
+stripe.api_key = config('STRIPE_SECRET_KEY', default='sk_test_dummy')
 
 
 def subscribe(request) -> HttpResponse:

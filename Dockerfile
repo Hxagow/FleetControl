@@ -27,7 +27,10 @@ ENV PYTHONUNBUFFERED=1 \
     DB_USER=postgres \
     DB_PASSWORD=postgres \
     DB_HOST=localhost \
-    DB_PORT=5432
+    DB_PORT=5432 \
+    STRIPE_SECRET_KEY=sk_test_dummy \
+    STRIPE_PUBLISHABLE_KEY=pk_test_dummy \
+    STRIPE_WEBHOOK_SECRET=whsec_dummy
 
 # Port à exposer
 EXPOSE 8000

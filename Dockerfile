@@ -24,8 +24,6 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     # for CairoSVG
     libcairo2 \
-    # for database connection check
-    netcat-openbsd \
     # other
     gcc \
     && rm -rf /var/lib/apt/lists/*
@@ -51,28 +49,13 @@ RUN pip install -r /tmp/requirements.txt
 # RUN python manage.py collectstatic --noinput
 
 # set the Django default project name
-ARG PROJ_NAME="fleet_control"
+ARG PROJ_NAME="cfehome"
 
 # create a bash script to run the Django project
 # this script will execute at runtime when
 # the container starts and the database is available
 RUN printf "#!/bin/bash\n" > ./paracord_runner.sh && \
-    printf "# Set default environment variables\n" >> ./paracord_runner.sh && \
-    printf "export DATABASE_URL=\"\${DATABASE_URL:-postgresql://postgres:postgres@localhost:5432/fleet_control_db}\"\n" >> ./paracord_runner.sh && \
-    printf "if [ ! -z \"\$DATABASE_URL\" ]; then\n" >> ./paracord_runner.sh && \
-    printf "  export DB_HOST=\$(echo \$DATABASE_URL | awk -F[@//] '{print \$4}' | cut -d: -f1)\n" >> ./paracord_runner.sh && \
-    printf "  export DB_PORT=\$(echo \$DATABASE_URL | awk -F[@//] '{print \$4}' | cut -d: -f2)\n" >> ./paracord_runner.sh && \
-    printf "else\n" >> ./paracord_runner.sh && \
-    printf "  export DB_HOST=\"\${PGHOST:-localhost}\"\n" >> ./paracord_runner.sh && \
-    printf "  export DB_PORT=\"\${PGPORT:-5432}\"\n" >> ./paracord_runner.sh && \
-    printf "fi\n\n" >> ./paracord_runner.sh && \
     printf "RUN_PORT=\"\${PORT:-8000}\"\n\n" >> ./paracord_runner.sh && \
-    printf "echo \"Waiting for postgres on \$DB_HOST:\$DB_PORT...\"\n" >> ./paracord_runner.sh && \
-    printf "until nc -z \$DB_HOST \$DB_PORT 2>/dev/null; do\n" >> ./paracord_runner.sh && \
-    printf "  echo \"PostgreSQL is unavailable - sleeping\"\n" >> ./paracord_runner.sh && \
-    printf "  sleep 1\n" >> ./paracord_runner.sh && \
-    printf "done\n" >> ./paracord_runner.sh && \
-    printf "echo \"PostgreSQL started\"\n\n" >> ./paracord_runner.sh && \
     printf "python manage.py migrate --no-input\n" >> ./paracord_runner.sh && \
     printf "gunicorn ${PROJ_NAME}.wsgi:application --bind \"0.0.0.0:\$RUN_PORT\"\n" >> ./paracord_runner.sh
 

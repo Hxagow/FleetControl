@@ -24,6 +24,8 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     # for CairoSVG
     libcairo2 \
+    # for database connection check
+    netcat-openbsd \
     # other
     gcc \
     && rm -rf /var/lib/apt/lists/*
@@ -56,11 +58,14 @@ ARG PROJ_NAME="fleet_control"
 # the container starts and the database is available
 RUN printf "#!/bin/bash\n" > ./paracord_runner.sh && \
     printf "# Set default environment variables\n" >> ./paracord_runner.sh && \
-    printf "export DB_NAME=\"\${PGDATABASE:-fleet_control_db}\"\n" >> ./paracord_runner.sh && \
-    printf "export DB_USER=\"\${PGUSER:-postgres}\"\n" >> ./paracord_runner.sh && \
-    printf "export DB_PASSWORD=\"\${PGPASSWORD:-postgres}\"\n" >> ./paracord_runner.sh && \
-    printf "export DB_HOST=\"\${PGHOST:-localhost}\"\n" >> ./paracord_runner.sh && \
-    printf "export DB_PORT=\"\${PGPORT:-5432}\"\n\n" >> ./paracord_runner.sh && \
+    printf "export DATABASE_URL=\"\${DATABASE_URL:-postgresql://postgres:postgres@localhost:5432/fleet_control_db}\"\n" >> ./paracord_runner.sh && \
+    printf "if [ ! -z \"\$DATABASE_URL\" ]; then\n" >> ./paracord_runner.sh && \
+    printf "  export DB_HOST=\$(echo \$DATABASE_URL | awk -F[@//] '{print \$4}' | cut -d: -f1)\n" >> ./paracord_runner.sh && \
+    printf "  export DB_PORT=\$(echo \$DATABASE_URL | awk -F[@//] '{print \$4}' | cut -d: -f2)\n" >> ./paracord_runner.sh && \
+    printf "else\n" >> ./paracord_runner.sh && \
+    printf "  export DB_HOST=\"\${PGHOST:-localhost}\"\n" >> ./paracord_runner.sh && \
+    printf "  export DB_PORT=\"\${PGPORT:-5432}\"\n" >> ./paracord_runner.sh && \
+    printf "fi\n\n" >> ./paracord_runner.sh && \
     printf "RUN_PORT=\"\${PORT:-8000}\"\n\n" >> ./paracord_runner.sh && \
     printf "echo \"Waiting for postgres on \$DB_HOST:\$DB_PORT...\"\n" >> ./paracord_runner.sh && \
     printf "until nc -z \$DB_HOST \$DB_PORT 2>/dev/null; do\n" >> ./paracord_runner.sh && \

@@ -57,10 +57,13 @@ ARG PROJ_NAME="cfehome"
 # this script will execute at runtime when
 # the container starts and the database is available
 RUN printf "#!/bin/bash\n" > ./paracord_runner.sh && \
-    printf "RUN_PORT=\"\${PORT:-8000}\"\n\n" >> ./paracord_runner.sh && \
-    printf "echo \"Waiting for postgres...\"\n" >> ./paracord_runner.sh && \
-    printf "while ! nc -z \$POSTGRES_HOST \${POSTGRES_PORT:-5432}; do\n" >> ./paracord_runner.sh && \
-    printf "  sleep 0.1\n" >> ./paracord_runner.sh && \
+    printf "RUN_PORT=\"\${PORT:-8000}\"\n" >> ./paracord_runner.sh && \
+    printf "DB_PORT=\"\${POSTGRES_PORT:-5432}\"\n" >> ./paracord_runner.sh && \
+    printf "DB_HOST=\"\${POSTGRES_HOST:-db}\"\n\n" >> ./paracord_runner.sh && \
+    printf "echo \"Waiting for postgres on \$DB_HOST:\$DB_PORT...\"\n" >> ./paracord_runner.sh && \
+    printf "while ! nc -z \$DB_HOST \$DB_PORT; do\n" >> ./paracord_runner.sh && \
+    printf "  echo \"PostgreSQL is unavailable - sleeping\"\n" >> ./paracord_runner.sh && \
+    printf "  sleep 1\n" >> ./paracord_runner.sh && \
     printf "done\n" >> ./paracord_runner.sh && \
     printf "echo \"PostgreSQL started\"\n\n" >> ./paracord_runner.sh && \
     printf "python manage.py migrate --no-input\n" >> ./paracord_runner.sh && \

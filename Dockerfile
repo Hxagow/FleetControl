@@ -58,10 +58,10 @@ ARG PROJ_NAME="cfehome"
 # the container starts and the database is available
 RUN printf "#!/bin/bash\n" > ./paracord_runner.sh && \
     printf "RUN_PORT=\"\${PORT:-8000}\"\n" >> ./paracord_runner.sh && \
-    printf "DB_PORT=\"\${POSTGRES_PORT:-5432}\"\n" >> ./paracord_runner.sh && \
-    printf "DB_HOST=\"\${POSTGRES_HOST:-db}\"\n\n" >> ./paracord_runner.sh && \
+    printf "DB_PORT=\"\${PGPORT:-5432}\"\n" >> ./paracord_runner.sh && \
+    printf "DB_HOST=\"\${PGHOST:-localhost}\"\n\n" >> ./paracord_runner.sh && \
     printf "echo \"Waiting for postgres on \$DB_HOST:\$DB_PORT...\"\n" >> ./paracord_runner.sh && \
-    printf "while ! nc -z \$DB_HOST \$DB_PORT; do\n" >> ./paracord_runner.sh && \
+    printf "until nc -z \$DB_HOST \$DB_PORT 2>/dev/null; do\n" >> ./paracord_runner.sh && \
     printf "  echo \"PostgreSQL is unavailable - sleeping\"\n" >> ./paracord_runner.sh && \
     printf "  sleep 1\n" >> ./paracord_runner.sh && \
     printf "done\n" >> ./paracord_runner.sh && \

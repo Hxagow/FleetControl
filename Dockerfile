@@ -20,9 +20,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copie du code source
 COPY src/ .
 
-# Variables d'environnement
-ENV PYTHONUNBUFFERED=1
-ENV DJANGO_SETTINGS_MODULE=fleet_control.settings
+# Variables d'environnement par défaut
+ENV PYTHONUNBUFFERED=1 \
+    DJANGO_SETTINGS_MODULE=fleet_control.settings \
+    DB_NAME=postgres \
+    DB_USER=postgres \
+    DB_PASSWORD=postgres \
+    DB_HOST=localhost \
+    DB_PORT=5432
 
 # Port à exposer
 EXPOSE 8000

@@ -29,9 +29,10 @@ DEBUG = config('DJANGO_DEBUG', cast=bool)
 
 ALLOWED_HOSTS = [
     '.railway.app',
+    'fleetcontrol-production.up.railway.app',
 ]
 if DEBUG:
-    ALLOWED_HOSTS = [
+    ALLOWED_HOSTS += [
         'localhost',
         '127.0.0.1',
     ]

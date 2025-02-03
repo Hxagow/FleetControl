@@ -1,3 +1,9 @@
+# Ignore vendors static files
+src/staticfiles/vendors
+
+# Ignore local cdn 
+local-cdn/
+
 # Python/Django
 *.py[cod]
 __pycache__/

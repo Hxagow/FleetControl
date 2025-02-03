@@ -145,6 +145,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_BASE_DIR = BASE_DIR / 'staticfiles'
+STATICFILES_VENDOR_DIR = STATICFILES_BASE_DIR / 'vendors'
+
+# Source(s) for django manage.py collectstatic
+STATICFILES_DIRS = [
+    STATICFILES_BASE_DIR
+]
+
+# Output directory for django manage.py collectstatic
+# Local cdn
+STATIC_ROOT = BASE_DIR.parent / 'local-cdn'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

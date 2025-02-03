@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     
     #apps
-    'subscriptions',
+    #'subscriptions',
     
 ]
 
@@ -97,18 +97,18 @@ WSGI_APPLICATION = 'fleet_control.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+CONN_MAX_AGE = config('CONN_MAX_AGE', cast=int, default=30)
+DATABASE_URL = config('DATABASE_URL', cast=str)
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': config('DB_NAME', default='postgres'),
-        'USER': config('DB_USER', default='postgres'),
-        'PASSWORD': config('DB_PASSWORD', default='postgres'),
-        'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default='5432'),
+if DATABASE_URL is not None:
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=CONN_MAX_AGE,
+            conn_health_checks=True,
+        )
     }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -153,7 +153,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #allauth
 SITE_ID = 1
-LOGIN_REDIRECT_URL = '/success/'
+LOGIN_REDIRECT_URL = '/accounts/email/'
 LOGOUT_REDIRECT_URL = '/accounts/'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True

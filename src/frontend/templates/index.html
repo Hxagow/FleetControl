@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FleetControl</title>
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+</head>
+<body>
+    <div class="container mx-auto">
+        <h1 class="text-3xl font-bold text-center mt-10">FleetControl</h1>
+        <p class="text-center mt-4">Gérez votre flotte de véhicules facilement.</p>
+    </div>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

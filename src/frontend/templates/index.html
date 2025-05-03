@@ -1,4 +1,6 @@
 {% load static %}
+{% load i18n %}
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -8,9 +10,31 @@
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
 </head>
 <body>
+    <div class="absolute top-4 right-4 space-x-2">
+        <form action="{% url 'set_language' %}" method="post" class="inline">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.path }}">
+            <input type="hidden" name="language" value="fr">
+            <button type="submit" class="text-gray-600 hover:text-gray-900 font-medium">FR</button>
+        </form>
+        <span class="text-gray-300">|</span>
+        <form action="{% url 'set_language' %}" method="post" class="inline">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.path }}">
+            <input type="hidden" name="language" value="en">
+            <button type="submit" class="text-gray-600 hover:text-gray-900 font-medium">EN</button>
+        </form>
+        <span class="text-gray-300">|</span>
+        <form action="{% url 'set_language' %}" method="post" class="inline">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.path }}">
+            <input type="hidden" name="language" value="de">
+            <button type="submit" class="text-gray-600 hover:text-gray-900 font-medium">DE</button>
+        </form>
+    </div>
     <div class="container mx-auto">
         <h1 class="text-3xl font-bold text-center mt-10">FleetControl</h1>
-        <p class="text-center mt-4">Gérez votre flotte de véhicules facilement.</p>
+        <p class="text-center mt-4">{% trans "Gérez votre flotte de véhicules facilement." %}</p>
     </div>
     {% block content %}
     {% endblock %}

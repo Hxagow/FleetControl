@@ -8,33 +8,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FleetControl</title>
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="text-gray-700">
     <div class="absolute top-4 right-4 space-x-2">
         <form action="{% url 'set_language' %}" method="post" class="inline">
             {% csrf_token %}
             <input name="next" type="hidden" value="{{ request.path }}">
             <input type="hidden" name="language" value="fr">
-            <button type="submit" class="text-gray-600 hover:text-gray-900 font-medium">FR</button>
+            <button type="submit" class="">FR</button>
         </form>
         <span class="text-gray-300">|</span>
         <form action="{% url 'set_language' %}" method="post" class="inline">
             {% csrf_token %}
             <input name="next" type="hidden" value="{{ request.path }}">
             <input type="hidden" name="language" value="en">
-            <button type="submit" class="text-gray-600 hover:text-gray-900 font-medium">EN</button>
+            <button type="submit" class="">EN</button>
         </form>
         <span class="text-gray-300">|</span>
         <form action="{% url 'set_language' %}" method="post" class="inline">
             {% csrf_token %}
             <input name="next" type="hidden" value="{{ request.path }}">
             <input type="hidden" name="language" value="de">
-            <button type="submit" class="text-gray-600 hover:text-gray-900 font-medium">DE</button>
+            <button type="submit" class="">DE</button>
         </form>
     </div>
     <div class="container mx-auto">
-        <h1 class="text-3xl font-bold text-center mt-10">FleetControl</h1>
-        <p class="text-center mt-4">{% trans "Gérez votre flotte de véhicules facilement." %}</p>
+        <h1 class="font-grotesk text-4xl text-center mt-10 text-gray-700">「Fleet Control」</h1>
+        <p class="text-center mt-4 text-gray-400">{% trans "Gérez votre flotte de véhicules facilement." %}</p>
     </div>
     {% block content %}
     {% endblock %}

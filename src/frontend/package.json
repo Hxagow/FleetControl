@@ -7,8 +7,11 @@
     "build": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css"
   },
   "devDependencies": {
-    "tailwindcss": "^3.4.1",
     "autoprefixer": "^10.4.17",
-    "postcss": "^8.4.35"
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1"
+  },
+  "dependencies": {
+    "@fontsource/space-grotesk": "^5.2.6"
   }
-} 
+}

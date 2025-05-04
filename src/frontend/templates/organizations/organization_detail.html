@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ organization.name }} - FleetControl{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-2xl mx-auto pt-4">
+    <div class="">
+        <h1 class="title text-center mb-8 text-gray-700">{{ organization.name }}</h1>
+
+        {% if organization.logo %}
+        <div class="flex justify-center mb-8">
+            <img src="{{ organization.logo.url }}" alt="{{ organization.name }} logo" class="h-32 object-contain rounded-md">
+        </div>
+        {% endif %}
+
+        <div class="space-y-6">
+            <div class="border-b border-gray-200 pb-4">
+                <h3 class="text-sm font-medium text-gray-500 mb-2">{% trans "Administrateurs" %}</h3>
+                <p class="text-lg">...</p>
+            </div>
+            
+            <div class="border-b border-gray-200 pb-4">
+                <h3 class="text-sm font-medium text-gray-500 mb-2">{% trans "Employés" %}</h3>
+                <p class="text-lg">...</p>
+            </div>
+
+            <div class="border-b border-gray-200 pb-4">
+                <h3 class="text-sm font-medium text-gray-500 mb-2">{% trans "Véhicules" %}</h3>
+                <p class="text-lg">...</p>
+            </div>
+        </div>
+
+        <div class="mt-8 flex flex-col space-y-4">
+            <a href="{% url 'organization_update' slug=organization.slug %}" class="button-base w-full text-center">
+                {% trans "Modifier" %}
+            </a>
+            <a href="{% url 'organizations_panel' %}" class="button-base w-full text-center">
+                {% trans "Retour" %}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

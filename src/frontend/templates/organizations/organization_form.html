@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="max-w-md mx-auto mt-10">
+    <h1 class="text-2xl font-bold mb-4 text-center">
+        {% if form.instance.pk %}
+            {% trans "Modifier l'organisation" %}
+        {% else %}
+            {% trans "Créer une organisation" %}
+        {% endif %}
+    </h1>
+    
+    <form method="post" enctype="multipart/form-data" class="space-y-4">
+        {% csrf_token %}
+        
+        {% if form.errors %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            {% trans "Veuillez corriger les erreurs ci-dessous." %}
+        </div>
+        {% endif %}
+
+        <div class="space-y-2">
+            <label for="id_name" class="text-small">{% trans "Nom" %}</label>
+            <input type="text" name="name" id="id_name" required class="input" placeholder="{% trans "Nom de l'organisation" %}" value="{{ form.instance.name|default:'' }}">
+            {% if form.name.errors %}
+            <p class="text-red-500 text-xs italic">{{ form.name.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="space-y-2">
+            <label for="id_description" class="text-small">{% trans "Description" %}</label>
+            <textarea name="description" id="id_description" class="input" rows="3" placeholder="{% trans "Description de l'organisation" %}">{{ form.instance.description|default:'' }}</textarea>
+            {% if form.description.errors %}
+            <p class="text-red-500 text-xs italic">{{ form.description.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="space-y-2">
+            <label for="id_logo" class="text-small">{% trans "Logo" %}</label>
+            {% if form.instance.logo %}
+            <div class="mb-2">
+                <img src="{{ form.instance.logo.url }}" alt="Logo actuel" class="h-20 w-20 object-contain rounded-md">
+                <p class="text-sm text-gray-600">{% trans "Logo actuel" %}</p>
+            </div>
+            {% endif %}
+            <input type="file" name="logo" id="id_logo" class="input" accept="image/*">
+            {% if form.logo.errors %}
+            <p class="text-red-500 text-xs italic">{{ form.logo.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="space-y-2">
+            <label for="id_phone" class="text-small">{% trans "Téléphone" %}</label>
+            <input type="tel" name="phone" id="id_phone" class="input" placeholder="{% trans "Numéro de téléphone" %}" value="{{ form.instance.phone|default:'' }}">
+            {% if form.phone.errors %}
+            <p class="text-red-500 text-xs italic">{{ form.phone.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="space-y-2">
+            <label for="id_address" class="text-small">{% trans "Adresse" %}</label>
+            <input type="text" name="address" id="id_address" class="input" placeholder="{% trans "Adresse" %}" value="{{ form.instance.address|default:'' }}">
+            {% if form.address.errors %}
+            <p class="text-red-500 text-xs italic">{{ form.address.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="space-y-2">
+            <label for="id_postal_code" class="text-small">{% trans "Code postal" %}</label>
+            <input type="text" name="postal_code" id="id_postal_code" class="input" placeholder="{% trans "Code postal" %}" required value="{{ form.instance.postal_code|default:'' }}">
+            {% if form.postal_code.errors %}
+            <p class="text-red-500 text-xs italic">{{ form.postal_code.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="space-y-2">
+            <label for="id_city" class="text-small">{% trans "Ville" %}</label>
+            <input type="text" name="city" id="id_city" class="input" placeholder="{% trans "Ville" %}" value="{{ form.instance.city|default:'' }}">
+            {% if form.city.errors %}
+            <p class="text-red-500 text-xs italic">{{ form.city.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="space-y-2">
+            <label for="id_country" class="text-small">{% trans "Pays" %}</label>
+            {{ form.country }}
+            {% if form.country.errors %}
+            <p class="text-red-500 text-xs italic">{{ form.country.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="space-y-2">
+            <label class="text-small block mb-2">{% trans "Langue" %}</label>
+            <div class="grid grid-cols-3 gap-2">
+                {% for radio in form.language %}
+                <div class="relative">
+                    {{ radio.tag }}
+                    <label for="{{ radio.id_for_label }}" class="block cursor-pointer select-none rounded-lg p-2 text-center peer-checked:bg-blue-500 peer-checked:text-white border border-gray-200 hover:bg-gray-50">
+                        {{ radio.choice_label }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+            {% if form.language.errors %}
+            <p class="text-red-500 text-xs italic">{{ form.language.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="flex justify-between space-x-4">
+            <a href="{% if form.instance.pk %}{% url 'organization_detail' slug=form.instance.slug %}{% else %}{% url 'organizations_panel' %}{% endif %}" 
+               class="button-base button-secondary flex-1">
+                {% trans "Annuler" %}
+            </a>
+            <button type="submit" class="button-green flex-1">
+                {% if form.instance.pk %}
+                    {% trans "Enregistrer" %}
+                {% else %}
+                    {% trans "Créer" %}
+                {% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

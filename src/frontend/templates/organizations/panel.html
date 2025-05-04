@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Panneau d'organisations" %} - FleetControl{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-2xl mx-auto">
+    <div class="">
+        <h1 class="title text-center mb-8 text-gray-700">{% trans "Mes Organisations" %}</h1>
+
+        {% if organizations %}
+        <div class="space-y-4">
+            {% for org in organizations %}
+            <a href="{% url 'organization_detail' slug=org.slug %}" 
+               class="block border border-gray-200 rounded-lg p-4 hover:bg-gray-100 transition-colors">
+                <div class="flex items-center space-x-4">
+                    {% if org.logo %}
+                    <img src="{{ org.logo.url }}" alt="{{ org.name }} logo" class="h-12 w-12 object-contain rounded-md">
+                    {% endif %}
+                    <div>
+                        <h2 class="text-lg font-medium text-gray-900">{{ org.name }}</h2>
+                        <p class="">{{ org.description }}</p>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-8">
+            <p class="text-2">{% trans "Aucune organisation trouvée." %}</p>
+            <p class="text-2">
+                {% trans "Commencez par créer votre première organisation" %}
+            </p>
+        </div>
+        {% endif %}
+
+        <div class="mt-8 flex flex-col justify-center items-center">
+            <a href="{% url 'organization_create' %}" class="button-base w-2/3 mb-4 text-center sm:w-2/3 md:w-2/3 lg:w-2/3 xl:w-1/2">{% trans "Nouvelle Organisation" %}</a>
+            <a href="{% url 'account_logout' %}" class="button-red w-2/3 text-center sm:w-2/3 md:w-2/3 lg:w-2/3 xl:w-1/2">{% trans "Déconnexion" %}</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -6,3 +6,47 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities; 
+
+@layer components {
+    .exemple {
+        @apply
+    }
+
+    .title {
+        @apply text-4xl text-center text-blue-400;
+    }
+
+    .text-1 {
+        @apply text-center mt-4 text-gray-400;
+    }
+
+    .text-2 {
+        @apply text-center mt-4 text-gray-700;
+    }
+
+    .text-small {
+        @apply mt-2 text-sm font-medium text-gray-700;
+    }
+    
+    .text-bold {
+        @apply text-center mt-4 text-gray-700 font-bold text-2xl;
+    }
+
+    .button-base {
+        @apply px-4 py-2 border-2 border-gray-700 rounded-md font-semibold
+    }
+
+    .button-red {
+        @apply  px-4 py-2 border-2 border-red-700 rounded-md text-red-700
+    }
+
+    .button-green {
+        @apply  px-4 py-2 border-2 border-green-700 rounded-md text-green-700
+    }
+
+    .input {
+        @apply w-full py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+}

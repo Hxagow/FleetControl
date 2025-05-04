@@ -17,17 +17,20 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.i18n import i18n_patterns
-from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import IndexView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n')),
+    path('accounts/', include('allauth.urls')),
+    
+    path('organizations/', include('organizations.urls'))
 ]
 
 urlpatterns += i18n_patterns(
-    path('', TemplateView.as_view(template_name="index.html"), name='index'),
+    path('', IndexView.as_view(), name='index'),
     prefix_default_language=False
 )
 

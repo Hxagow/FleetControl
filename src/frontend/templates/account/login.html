@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="max-w-md mx-auto mt-10">
+    <h1 class="text-bold">{% trans "Connexion" %}</h1>
+    <form method="post" action="{% url 'account_login' %}" class="space-y-4">
+        {% csrf_token %}
+        
+        {% if form.errors %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            {% trans "L'email ou le mot de passe sont incorrectes" %}
+        </div>
+        {% endif %}
+
+        <div class="space-y-2">
+            <label for="id_login" class="text-small">{% trans "Email" %}</label>
+            <input type="email" name="login" id="id_login" required class="input" placeholder="{% trans 'Votre email' %}">
+            {% if form.login.errors %}
+            <p class="text-red-500 text-xs italic">{{ form.login.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="space-y-2">
+            <label for="id_password" class="text-small">{% trans "Mot de passe" %}</label>
+            <input type="password" name="password" id="id_password" required class="input" placeholder="{% trans 'Votre mot de passe' %}">
+            {% if form.password.errors %}
+            <p class="text-red-500 text-xs italic">{{ form.password.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="flex items-center">
+            <input type="checkbox" name="remember" id="id_remember" class="h-4 w-4 rounded mr-2 border-gray-700">
+            <label for="id_remember" class="">
+                {% trans "Se souvenir de moi" %}
+            </label>
+        </div>
+
+        <button type="submit" class="w-full button-base">
+            {% trans "Se connecter" %}
+        </button>
+    </form>
+    <p class="text-center mt-4">
+        {% trans "Pas encore de compte ?" %} 
+        <a href="{% url 'account_signup' %}" class="text-blue-600 hover:text-blue-800">{% trans "Créer un compte" %}</a>
+    </p>
+    <p class="text-center mt-4">
+        <a href="{% url 'account_reset_password' %}" class="text-blue-600 hover:text-blue-800">{% trans "Mot de passe oublié ?" %}</a>
+    </p>
+</div>
+{% endblock %}

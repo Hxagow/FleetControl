@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="max-w-md mx-auto mt-10">
+    <h1 class="text-2xl font-bold mb-4 text-center">{% trans "Inscription" %}</h1>
+    <form method="post" action="{% url 'account_signup' %}" class="space-y-4">
+        {% csrf_token %}
+        
+        {% if form.errors %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            {% trans "Veuillez corriger les erreurs ci-dessous." %}
+        </div>
+        {% endif %}
+
+        <div class="space-y-2">
+            <label for="id_email" class="text-small">{% trans "Email" %}</label>
+            <input type="email" name="email" id="id_email" required class="input" placeholder="{% trans 'Votre email' %}">
+            {% if form.email.errors %}
+            <p class="text-red-500 text-xs italic">{{ form.email.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="space-y-2">
+            <label for="id_first_name" class="text-small">{% trans "Prénom" %}</label>
+            <input type="text" name="first_name" id="id_first_name" required class="input" placeholder="{% trans 'Votre prénom' %}">
+            {% if form.first_name.errors %}
+            <p class="text-red-500 text-xs italic">{{ form.first_name.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="space-y-2">
+            <label for="id_last_name" class="text-small">{% trans "Nom" %}</label>
+            <input type="text" name="last_name" id="id_last_name" required class="input" placeholder="{% trans 'Votre nom' %}">
+            {% if form.last_name.errors %}
+            <p class="text-red-500 text-xs italic">{{ form.last_name.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="space-y-2">
+            <label for="id_password1" class="text-small">{% trans "Mot de passe" %}</label>
+            <input type="password" name="password1" id="id_password1" required class="input" placeholder="{% trans 'Votre mot de passe' %}">
+            {% if form.password1.errors %}
+            <p class="text-red-500">{{ form.password1.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="space-y-2">
+            <label for="id_password2" class="text-small">{% trans "Confirmation du mot de passe" %}</label>
+            <input type="password" name="password2" id="id_password2" required class="input" placeholder="{% trans 'Confirmez votre mot de passe' %}">
+            {% if form.password2.errors %}
+            <p class="text-red-500">{{ form.password2.errors }}</p>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="w-full button-base">
+            {% trans "Créer un compte" %}
+        </button>
+    </form>
+    <p class="text-center mt-4">
+        {% trans "Déjà un compte ?" %} 
+        <a href="{% url 'account_login' %}" class="text-blue-600 hover:text-blue-800">{% trans "Connexion" %}</a>
+    </p>
+</div>
+{% endblock %}

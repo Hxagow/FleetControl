@@ -1,0 +1,63 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FleetControl{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="font-grotesk text-gray-700 min-h-screen bg-white">
+
+    <!-- Barre de langue -->
+    <div class="absolute top-4 right-4 space-x-2 text-sm">
+        {% for code, label in LANGUAGES %}
+            <form action="{% url 'set_language' %}" method="post" class="inline">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <input type="hidden" name="language" value="{{ code }}">
+                <button type="submit" class="{% if LANGUAGE_CODE == code %}font-bold{% endif %} uppercase">
+                    {{ code }}
+                </button>
+            </form>
+            {% if not forloop.last %}
+                <span class="text-gray-300">|</span>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <!-- Contenu principal -->
+    <main class="container mx-auto px-4 pt-20">
+        {% block content %}
+        {% endblock %}
+
+        <div class="absolute top-2 right-4 space-x-2">
+            <form action="{% url 'set_language' %}" method="post" class="inline">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.path }}">
+                <input type="hidden" name="language" value="fr">
+                <button type="submit" class="">FR</button>
+            </form>
+            <span class="text-gray-300">|</span>
+            <form action="{% url 'set_language' %}" method="post" class="inline">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.path }}">
+                <input type="hidden" name="language" value="en">
+                <button type="submit" class="">EN</button>
+            </form>
+            <span class="text-gray-300">|</span>
+            <form action="{% url 'set_language' %}" method="post" class="inline">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.path }}">
+                <input type="hidden" name="language" value="de">
+                <button type="submit" class="">DE</button>
+            </form>
+        </div>
+
+    </main>
+
+</body>
+</html>

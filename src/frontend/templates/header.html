@@ -1,0 +1,30 @@
+{% load i18n %}
+
+<header class="top-0 left-0 right-0 bg-white border-b border-gray-300 p-4">
+    <div class="flex justify-between">
+        <a href="/" class="text-black text-lg">「Fleet Control」</a>
+        
+        <div class="space-x-2">
+            <form action="{% url 'set_language' %}" method="post" class="inline">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.path }}">
+                <input type="hidden" name="language" value="fr">
+                <button type="submit" class="">FR</button>
+            </form>
+            <span class="text-gray-300">|</span>
+            <form action="{% url 'set_language' %}" method="post" class="inline">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.path }}">
+                <input type="hidden" name="language" value="en">
+                <button type="submit" class="">EN</button>
+            </form>
+            <span class="text-gray-300">|</span>
+            <form action="{% url 'set_language' %}" method="post" class="inline">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.path }}">
+                <input type="hidden" name="language" value="de">
+                <button type="submit" class="">DE</button>
+            </form>
+        </div>
+    </div>
+</header> 

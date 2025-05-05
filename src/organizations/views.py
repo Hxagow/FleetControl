@@ -35,3 +35,12 @@ def organization_update(request, slug):
         form.save()
         return redirect('organization_detail', slug=org.slug)
     return render(request, 'organizations/organization_form.html', {'form': form})
+
+
+@login_required
+def organization_delete(request, slug):
+    org = get_object_or_404(Organization, slug=slug)
+    if request.method == "POST":
+        org.delete()
+        return redirect('organizations_panel')
+    return redirect('organization_detail', slug=slug)

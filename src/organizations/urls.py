@@ -12,4 +12,5 @@ urlpatterns = [
     path('create/', views.organization_create, name='organization_create'),
     path('<slug:slug>/', views.organization_detail, name='organization_detail'),
     path('<slug:slug>/update/', views.organization_update, name='organization_update'),
+    path('<slug:slug>/delete/', views.organization_delete, name='organization_delete'),
 ]

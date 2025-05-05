@@ -119,6 +119,20 @@
                 {% endif %}
             </button>
         </div>
+
+        {% if form.instance.pk %}
+        <div class="mt-4">
+            <button type="button" onclick="if(confirm('{% trans "Êtes-vous sûr de vouloir supprimer cette organisation ? Cette action est irréversible." %}')) { document.getElementById('delete-form').submit(); }" class="button-red w-full text-center">
+                {% trans "Supprimer" %}
+            </button>
+        </div>
+        {% endif %}
     </form>
+
+    {% if form.instance.pk %}
+    <form id="delete-form" method="POST" action="{% url 'organization_delete' slug=form.instance.slug %}" class="hidden">
+        {% csrf_token %}
+    </form>
+    {% endif %}
 </div>
 {% endblock %}

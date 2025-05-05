@@ -89,7 +89,7 @@
             {% endif %}
         </div>
 
-        <div class="space-y-2">
+        {% comment %} <div class="space-y-2">
             <label class="text-small block mb-2">{% trans "Langue" %}</label>
             <div class="grid grid-cols-3 gap-2">
                 {% for radio in form.language %}
@@ -104,9 +104,9 @@
             {% if form.language.errors %}
             <p class="text-red-500 text-xs italic">{{ form.language.errors }}</p>
             {% endif %}
-        </div>
+        </div> {% endcomment %}
 
-        <div class="flex justify-between space-x-4">
+        <div class="flex justify-between space-x-4 pt-4">
             <a href="{% if form.instance.pk %}{% url 'organization_detail' slug=form.instance.slug %}{% else %}{% url 'organizations_panel' %}{% endif %}" 
                class="button-base button-secondary flex-1">
                 {% trans "Annuler" %}

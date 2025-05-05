@@ -12,6 +12,10 @@
         </div>
         {% endif %}
 
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+
         <div class="space-y-2">
             <label for="id_login" class="text-small">{% trans "Email" %}</label>
             <input type="email" name="login" id="id_login" required class="input" placeholder="{% trans 'Votre email' %}">

@@ -2,6 +2,9 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 from django_countries.fields import CountryField
+from django.utils.crypto import get_random_string
+from django.utils import timezone
+from django.conf import settings
 
 class Organization(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -55,3 +58,28 @@ class Organization(models.Model):
                 i += 1
             self.slug = slug
         super().save(*args, **kwargs)
+
+class Invitation(models.Model):
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    email = models.EmailField()
+    role = models.CharField(max_length=20, default='member')
+    token = models.CharField(max_length=64, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    accepted = models.BooleanField(default=False)
+    accepted_at = models.DateTimeField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.token:
+            self.token = get_random_string(64)
+        if not self.expires_at:
+            self.expires_at = timezone.now() + timezone.timedelta(days=7)
+        super().save(*args, **kwargs)
+
+    def is_expired(self):
+        return timezone.now() > self.expires_at
+
+    def accept(self):
+        self.accepted = True
+        self.accepted_at = timezone.now()
+        self.save()

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from .models import Organization
+from .models import Organization, Invitation
 from .forms import OrganizationForm, InvitationForm
 from users.models import Membership, User
 from django.contrib import messages
@@ -99,8 +99,27 @@ def organization_invite(request, slug):
             # Vérifier si l'utilisateur existe déjà
             user = User.objects.filter(email=email).first()
             
+            # Vérifier si une invitation existe déjà pour cet email
+            existing_invitation = Invitation.objects.filter(
+                organization=org,
+                email=email,
+                accepted=False
+            ).first()
+            
+            if existing_invitation and not existing_invitation.is_expired():
+                messages.warning(request, "Une invitation est déjà en attente pour cet email.")
+                return redirect('organization_invite', slug=slug)
+            
+            # Créer une nouvelle invitation
+            invitation = Invitation.objects.create(
+                organization=org,
+                email=email,
+                role=role
+            )
+            
             # Générer l'URL d'invitation
             current_site = get_current_site(request)
+            
             if user:
                 # L'utilisateur existe déjà
                 if org.memberships.filter(user=user).exists():
@@ -113,23 +132,11 @@ def organization_invite(request, slug):
                     'inviter': request.user,
                     'domain': current_site.domain,
                     'join_url': request.build_absolute_uri(
-                        reverse('join_organization', kwargs={'slug': org.slug})
+                        reverse('join_organization', kwargs={'slug': org.slug, 'token': invitation.token})
                     )
                 }
                 
                 html_message = render_to_string('organizations/email/existing_user_invitation.html', context)
-                try:
-                    send_mail(
-                        subject=f'Invitation à rejoindre {org.name}',
-                        message=strip_tags(html_message),
-                        from_email=settings.DEFAULT_FROM_EMAIL,
-                        recipient_list=[email],
-                        html_message=html_message
-                    )
-                    messages.success(request, f"Une invitation a été envoyée à {email}.")
-                except Exception as e:
-                    messages.error(request, "Une erreur s'est produite lors de l'envoi de l'email. Veuillez réessayer plus tard.")
-                    return redirect('organization_invite', slug=slug)
             else:
                 # L'utilisateur n'existe pas encore
                 context = {
@@ -140,24 +147,27 @@ def organization_invite(request, slug):
                         reverse('account_signup') + '?' + urlencode({
                             'organization': org.slug,
                             'email': email,
-                            'role': role
+                            'role': role,
+                            'token': invitation.token
                         })
                     )
                 }
                 
                 html_message = render_to_string('organizations/email/new_user_invitation.html', context)
-                try:
-                    send_mail(
-                        subject=f'Invitation à rejoindre {org.name}',
-                        message=strip_tags(html_message),
-                        from_email=settings.DEFAULT_FROM_EMAIL,
-                        recipient_list=[email],
-                        html_message=html_message
-                    )
-                    messages.success(request, f"Une invitation a été envoyée à {email}.")
-                except Exception as e:
-                    messages.error(request, "Une erreur s'est produite lors de l'envoi de l'email. Veuillez réessayer plus tard.")
-                    return redirect('organization_invite', slug=slug)
+            
+            try:
+                send_mail(
+                    subject=f'Invitation à rejoindre {org.name}',
+                    message=strip_tags(html_message),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[email],
+                    html_message=html_message
+                )
+                messages.success(request, f"Une invitation a été envoyée à {email}.")
+            except Exception as e:
+                invitation.delete()
+                messages.error(request, "Une erreur s'est produite lors de l'envoi de l'email. Veuillez réessayer plus tard.")
+                return redirect('organization_invite', slug=slug)
             
             return redirect('organization_detail', slug=slug)
     else:
@@ -169,15 +179,26 @@ def organization_invite(request, slug):
     })
 
 
-def join_organization(request, slug):
+def join_organization(request, slug, token=None):
     org = get_object_or_404(Organization, slug=slug)
+    
+    # Vérifier l'invitation si un token est fourni
+    invitation = None
+    if token:
+        invitation = get_object_or_404(Invitation, token=token, organization=org)
+        if invitation.is_expired():
+            messages.error(request, "Cette invitation a expiré.")
+            return redirect('home')
+        if invitation.accepted:
+            messages.warning(request, "Cette invitation a déjà été utilisée.")
+            return redirect('home')
     
     # Si l'utilisateur n'est pas connecté, rediriger vers la page de connexion
     if not request.user.is_authenticated:
         # Construire l'URL de redirection après la connexion
         next_url = reverse('join_organization', kwargs={'slug': slug})
-        if request.GET.get('role'):
-            next_url += f"?role={request.GET.get('role')}"
+        if token:
+            next_url += f"?token={token}"
         
         # Rediriger vers la page de connexion avec le paramètre next
         login_url = reverse('account_login')
@@ -190,16 +211,22 @@ def join_organization(request, slug):
         return redirect('organization_detail', slug=slug)
     
     if request.method == "POST":
-        # Créer l'adhésion avec le rôle spécifié dans l'URL
-        role = request.GET.get('role', 'member')  # Par défaut, le rôle est 'member'
+        # Créer l'adhésion avec le rôle spécifié dans l'invitation ou par défaut
+        role = invitation.role if invitation else request.GET.get('role', 'member')
         Membership.objects.create(
             user=request.user,
             organization=org,
             role=role
         )
+        
+        # Marquer l'invitation comme acceptée si elle existe
+        if invitation:
+            invitation.accept()
+        
         messages.success(request, f"Vous avez rejoint l'organisation {org.name}.")
         return redirect('organization_detail', slug=slug)
     
     return render(request, 'organizations/join_confirmation.html', {
-        'organization': org
+        'organization': org,
+        'invitation': invitation
     })

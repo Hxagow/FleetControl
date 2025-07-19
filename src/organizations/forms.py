@@ -1,7 +1,6 @@
 from django import forms
 from django_countries.fields import CountryField
 from .models import Organization
-from users.models import Membership
 
 class OrganizationForm(forms.ModelForm):
     # LANGUAGE_CHOICES = [
@@ -19,14 +18,4 @@ class OrganizationForm(forms.ModelForm):
     
     class Meta:
         model = Organization
-        fields = ['name', 'description', 'logo', 'phone', 'address', 'postal_code', 'city', 'country']
-
-class InvitationForm(forms.Form):
-    email = forms.EmailField(
-        label='Email',
-        widget=forms.EmailInput(attrs={'class': 'input-base', 'placeholder': 'email@example.com'})
-    )
-    role = forms.ChoiceField(
-        choices=Membership.ROLE_CHOICES,
-        widget=forms.Select(attrs={'class': 'input-base'})
-    )
+        fields = ['logo', 'name', 'description', 'phone', 'address', 'postal_code', 'city', 'country']

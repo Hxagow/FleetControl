@@ -19,6 +19,20 @@
         </div>
         {% endif %}
 
+        <div class="space-y-2 items-center">
+            <label for="id_logo" class="text-small">{% trans "Logo" %}</label>
+            {% if form.instance.logo %}
+            <div class="mb-2">
+                <img src="{{ form.instance.logo.url }}" alt="Logo actuel" class="h-20 w-20 object-contain rounded-md">
+                <p class="text-sm text-gray-600">{% trans "Logo actuel" %}</p>
+            </div>
+            {% endif %}
+            <input type="file" name="logo" id="id_logo" class="input" accept="image/*">
+            {% if form.logo.errors %}
+            <p class="text-red-500 text-xs italic">{{ form.logo.errors }}</p>
+            {% endif %}
+        </div>
+
         <div class="space-y-2">
             <label for="id_name" class="text-small">{% trans "Nom" %}</label>
             <input type="text" name="name" id="id_name" required class="input" placeholder="{% trans "Nom de l'organisation" %}" value="{{ form.instance.name|default:'' }}">
@@ -32,20 +46,6 @@
             <textarea name="description" id="id_description" class="input" rows="3" placeholder="{% trans "Description de l'organisation" %}">{{ form.instance.description|default:'' }}</textarea>
             {% if form.description.errors %}
             <p class="text-red-500 text-xs italic">{{ form.description.errors }}</p>
-            {% endif %}
-        </div>
-
-        <div class="space-y-2">
-            <label for="id_logo" class="text-small">{% trans "Logo" %}</label>
-            {% if form.instance.logo %}
-            <div class="mb-2">
-                <img src="{{ form.instance.logo.url }}" alt="Logo actuel" class="h-20 w-20 object-contain rounded-md">
-                <p class="text-sm text-gray-600">{% trans "Logo actuel" %}</p>
-            </div>
-            {% endif %}
-            <input type="file" name="logo" id="id_logo" class="input" accept="image/*">
-            {% if form.logo.errors %}
-            <p class="text-red-500 text-xs italic">{{ form.logo.errors }}</p>
             {% endif %}
         </div>
 

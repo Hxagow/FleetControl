@@ -27,21 +27,3 @@ class CustomSignupForm(SignupForm):
 
     def save(self, request):
         user = super().save(request)
-        
-        # Vérifier si l'inscription vient d'une invitation
-        org_slug = request.GET.get('organization')
-        role = request.GET.get('role')
-        
-        if org_slug and role:
-            try:
-                organization = Organization.objects.get(slug=org_slug)
-                # Créer l'adhésion avec le rôle spécifié
-                Membership.objects.create(
-                    user=user,
-                    organization=organization,
-                    role=role
-                )
-            except Organization.DoesNotExist:
-                pass
-        
-        return user 

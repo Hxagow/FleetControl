@@ -13,6 +13,4 @@ urlpatterns = [
     path('<slug:slug>/', views.organization_detail, name='organization_detail'),
     path('<slug:slug>/update/', views.organization_update, name='organization_update'),
     path('<slug:slug>/delete/', views.organization_delete, name='organization_delete'),
-    path('<slug:slug>/invite/', views.organization_invite, name='organization_invite'),
-    path('<slug:slug>/join/', views.join_organization, name='join_organization'),
 ]

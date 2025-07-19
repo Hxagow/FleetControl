@@ -109,7 +109,7 @@
         <div class="flex justify-between space-x-4 pt-4">
             <a href="{% if form.instance.pk %}{% url 'organization_detail' slug=form.instance.slug %}{% else %}{% url 'organizations_panel' %}{% endif %}" 
                class="button-base button-secondary flex-1">
-                {% trans "Annuler" %}
+                {% trans "Retour" %}
             </a>
             <button type="submit" class="button-green flex-1">
                 {% if form.instance.pk %}

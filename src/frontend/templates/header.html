@@ -6,9 +6,9 @@
         
         <div class="flex items-center space-x-4">
             {% if user.is_authenticated %}
-            <div class="text-sm bg-gray-100 p-2 rounded-md">
+            <a href="{% url 'users:profile' %}" class="text-sm bg-gray-100 p-2 rounded-md hover:bg-gray-200">
                 {{ user.email }}
-            </div>
+            </a>
             {% endif %}
             
             <div class="space-x-2">
@@ -33,6 +33,18 @@
                     <button type="submit" class="">DE</button>
                 </form>
             </div>
+            
+            {% if user.is_authenticated %}
+            <a href="{% url 'account_logout' %}" 
+               class="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+               title="{% trans 'Se déconnecter' %}">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M16 17L21 12L16 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+            {% endif %}
         </div>
     </div>
 </header> 

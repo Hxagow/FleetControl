@@ -33,15 +33,15 @@
     }
 
     .button-base {
-        @apply px-4 py-2 border border-gray-700 rounded-md text-center
+        @apply px-4 py-2 border border-gray-700 rounded-md text-center hover:shadow-md;
     }
 
     .button-red {
-        @apply  px-4 py-2 border border-red-700 rounded-md text-red-700 text-center
+        @apply  px-4 py-2 border border-red-700 rounded-md text-red-700 text-center hover:shadow-md;
     }
 
     .button-green {
-        @apply  px-4 py-2 border border-green-700 rounded-md text-green-700 text-center
+        @apply  px-4 py-2 border border-green-700 rounded-md text-green-700 text-center hover:shadow-md;
     }
 
     .input {

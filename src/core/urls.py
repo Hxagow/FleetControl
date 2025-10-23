@@ -20,11 +20,13 @@ from django.conf.urls.i18n import i18n_patterns
 from django.conf import settings
 from django.conf.urls.static import static
 from .views import IndexView
+from users.views import InvitationSignupView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n')),
     path('accounts/', include('allauth.urls')),
+    path('accounts/signup/', InvitationSignupView.as_view(), name='account_signup'),
     path('users/', include('users.urls')),
     path('organizations/', include('organizations.urls'))
 ]

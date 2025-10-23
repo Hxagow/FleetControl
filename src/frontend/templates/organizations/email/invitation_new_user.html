@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Invitation à rejoindre {{ organization.name }}</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+            {% if organization.logo %}
+            <img src="{{ organization.logo.url }}" alt="{{ organization.name }}" style="max-width: 100px; margin-bottom: 20px;">
+            {% endif %}
+            <h1 style="color: #2563eb;">Invitation à rejoindre {{ organization.name }}</h1>
+        </div>
+
+        <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+            <p>Bonjour,</p>
+            <p><strong>{{ invited_by.first_name|default:invited_by.email }}</strong> vous invite à rejoindre l'organisation <strong>{{ organization.name }}</strong>.</p>
+            
+            {% if organization.description %}
+            <p style="margin-top: 20px; padding: 15px; background-color: #e5e7eb; border-radius: 6px;">
+                {{ organization.description }}
+            </p>
+            {% endif %}
+            
+            <p style="margin-top: 20px;">
+                <strong>Vous n'avez pas encore de compte ?</strong> Pas de problème ! Cliquez sur le bouton ci-dessous pour créer votre compte. Après inscription, vous verrez l'invitation dans vos notifications.
+            </p>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="{{ signup_url }}" 
+               style="display: inline-block; background-color: #2563eb; color: white; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+                Créer mon compte
+            </a>
+        </div>
+
+        <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; font-size: 14px; color: #6b7280;">
+            <p>Après avoir créé votre compte, connectez-vous pour voir l'invitation dans vos notifications.</p>
+            <p>Cette invitation expire le {{ invitation.expires_at|date:"d/m/Y à H:i" }}.</p>
+            <p>Si le bouton ne fonctionne pas, copiez et collez ce lien dans votre navigateur :</p>
+            <p style="word-break: break-all; background-color: #f3f4f6; padding: 10px; border-radius: 4px;">
+                {{ signup_url }}
+            </p>
+        </div>
+    </div>
+</body>
+</html> 

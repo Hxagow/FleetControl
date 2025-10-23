@@ -2,6 +2,9 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 from django_countries.fields import CountryField
+import uuid
+from datetime import timedelta
+from django.utils import timezone
 
 class Organization(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -55,3 +58,41 @@ class Organization(models.Model):
                 i += 1
             self.slug = slug
         super().save(*args, **kwargs)
+
+
+class Invitation(models.Model):
+    STATUS_CHOICES = [
+        ('pending', _('En attente')),
+        ('accepted', _('Acceptée')),
+        ('declined', _('Refusée')),
+        ('expired', _('Expirée')),
+    ]
+
+    email = models.EmailField(_('Email'))
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='invitations')
+    invited_by = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='sent_invitations')
+    token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    responded_at = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        unique_together = ('email', 'organization')
+        verbose_name = _('Invitation')
+        verbose_name_plural = _('Invitations')
+
+    def __str__(self):
+        return f"Invitation to {self.email} for {self.organization.name}"
+
+    def save(self, *args, **kwargs):
+        if not self.expires_at:
+            self.expires_at = timezone.now() + timedelta(days=7)  # Expire dans 7 jours
+        super().save(*args, **kwargs)
+
+    def is_expired(self):
+        return timezone.now() > self.expires_at
+
+    def can_be_accepted(self):
+        return self.status == 'pending' and not self.is_expired()

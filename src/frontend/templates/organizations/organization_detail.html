@@ -54,10 +54,26 @@
 
         <div class="mt-8 flex flex-col space-y-4">
             {% if is_admin %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <a href="{% url 'invite_user' slug=organization.slug %}" class="button-base text-center bg-blue-600 text-white hover:bg-blue-700">
+                    {% trans "Inviter un utilisateur" %}
+                </a>
+                <a href="{% url 'organization_members' slug=organization.slug %}" class="button-base text-center bg-gray-600 text-white hover:bg-gray-700">
+                    {% trans "Gérer les membres" %}
+                </a>
+            </div>
             <a href="{% url 'organization_update' slug=organization.slug %}" class="button-base w-full text-center">
-                {% trans "Modifier" %}
+                {% trans "Modifier l'organisation" %}
             </a>
             {% endif %}
+            
+            <!-- Bouton pour quitter l'organisation -->
+            <a href="{% url 'leave_organization' slug=organization.slug %}" 
+               class="w-full button-red"
+               onclick="return confirm('{% trans "Êtes-vous sûr de vouloir quitter cette organisation ?" %}')">
+                {% trans "Quitter l'organisation" %}
+            </a>
+            
             <a href="{% url 'organizations_panel' %}" class="button-base w-full text-center">
                 {% trans "Retour" %}
             </a>

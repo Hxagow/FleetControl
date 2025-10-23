@@ -5,6 +5,35 @@
 
 {% block content %}
 <div class="w-full max-w-2xl mx-auto">
+    
+    <!-- Notifications d'invitations -->
+    {% if pending_invitations %}
+        {% for invitation in pending_invitations %}
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div class="flex-1">
+                    <h3 class="text-sm font-medium text-blue-900 mb-1">
+                        {% trans "Invitation à rejoindre" %} {{ invitation.organization.name }}
+                    </h3>
+                    <p class="text-xs text-blue-700">
+                        {% trans "Invité par" %} {{ invitation.invited_by.first_name|default:invitation.invited_by.email }}
+                    </p>
+                </div>
+                <div class="flex space-x-2 ml-4">
+                    <a href="{% url 'users:accept_invitation' invitation.id %}" 
+                       class="px-3 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition-colors duration-200 ease-in-out shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        {% trans "Accepter" %}
+                    </a>
+                    <a href="{% url 'users:decline_invitation' invitation.id %}" 
+                       class="px-3 py-2 bg-white text-gray-700 text-sm font-medium rounded-md border border-gray-300 hover:bg-gray-50 transition-colors duration-200 ease-in-out shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                        {% trans "Refuser" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+    
     <div class="">
         <h1 class="title text-center mb-8 text-gray-700">{% trans "Organisations" %}</h1>
 
@@ -12,7 +41,7 @@
         <div class="space-y-4">
             {% for org in organizations %}
             <a href="{% url 'organization_detail' slug=org.slug %}" 
-               class="block border border-gray-200 rounded-lg p-4 hover:bg-gray-100 transition-colors">
+               class="block border border-gray-200 rounded-lg p-4 hover:bg-gray-100 hover:border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                 <div class="flex items-center space-x-4">
                     {% if org.logo %}
                     <img src="{{ org.logo.url }}" alt="{{ org.name }} logo" class="h-12 w-12 object-contain rounded-md">

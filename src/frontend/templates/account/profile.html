@@ -28,7 +28,7 @@
             <label for="{{ form.first_name.id_for_label }}" class="text-small">{{ form.first_name.label }}</label>
             {{ form.first_name }}
             {% if form.first_name.errors %}
-            <p class="text-red-500 text-xs italic">{{ form.first_name.errors|striptags }}</p>
+            <p class="text-red-500">{{ form.first_name.errors|striptags }}</p>
             {% endif %}
         </div>
 
@@ -36,7 +36,7 @@
             <label for="{{ form.last_name.id_for_label }}" class="text-small">{{ form.last_name.label }}</label>
             {{ form.last_name }}
             {% if form.last_name.errors %}
-            <p class="text-red-500 text-xs italic">{{ form.last_name.errors|striptags }}</p>
+            <p class="text-red-500">{{ form.last_name.errors|striptags }}</p>
             {% endif %}
         </div>
 
@@ -44,7 +44,7 @@
             <label for="{{ form.email.id_for_label }}" class="text-small">{{ form.email.label }}</label>
             {{ form.email }}
             {% if form.email.errors %}
-            <p class="text-red-500 text-xs italic">{{ form.email.errors|striptags }}</p>
+            <p class="text-red-500">{{ form.email.errors|striptags }}</p>
             {% endif %}
         </div>
 

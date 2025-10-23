@@ -13,40 +13,40 @@
         {% endif %}
 
         <div class="space-y-2">
-            <label for="id_email" class="text-small">{% trans "Email" %}</label>
-            <input type="email" name="email" id="id_email" required class="input" placeholder="{% trans 'Votre email' %}">
+            <label for="{{ form.email.id_for_label }}" class="text-small">{{ form.email.label }}</label>
+            {{ form.email }}
             {% if form.email.errors %}
             <p class="text-red-500">{{ form.email.errors|striptags }}</p>
             {% endif %}
         </div>
 
         <div class="space-y-2">
-            <label for="id_first_name" class="text-small">{% trans "Prénom" %}</label>
-            <input type="text" name="first_name" id="id_first_name" required class="input" placeholder="{% trans 'Votre prénom' %}">
+            <label for="{{ form.first_name.id_for_label }}" class="text-small">{{ form.first_name.label }}</label>
+            {{ form.first_name }}
             {% if form.first_name.errors %}
             <p class="text-red-500">{{ form.first_name.errors|striptags }}</p>
             {% endif %}
         </div>
 
         <div class="space-y-2">
-            <label for="id_last_name" class="text-small">{% trans "Nom" %}</label>
-            <input type="text" name="last_name" id="id_last_name" required class="input" placeholder="{% trans 'Votre nom' %}">
+            <label for="{{ form.last_name.id_for_label }}" class="text-small">{{ form.last_name.label }}</label>
+            {{ form.last_name }}
             {% if form.last_name.errors %}
             <p class="text-red-500">{{ form.last_name.errors|striptags }}</p>
             {% endif %}
         </div>
 
         <div class="space-y-2">
-            <label for="id_password1" class="text-small">{% trans "Mot de passe" %}</label>
-            <input type="password" name="password1" id="id_password1" required class="input" placeholder="{% trans 'Votre mot de passe' %}">
+            <label for="{{ form.password1.id_for_label }}" class="text-small">{{ form.password1.label }}</label>
+            {{ form.password1 }}
             {% if form.password1.errors %}
             <p class="text-red-500">{{ form.password1.errors|striptags }}</p>
             {% endif %}
         </div>
 
         <div class="space-y-2">
-            <label for="id_password2" class="text-small">{% trans "Confirmation du mot de passe" %}</label>
-            <input type="password" name="password2" id="id_password2" required class="input" placeholder="{% trans 'Confirmez votre mot de passe' %}">
+            <label for="{{ form.password2.id_for_label }}" class="text-small">{{ form.password2.label }}</label>
+            {{ form.password2 }}
             {% if form.password2.errors %}
             <p class="text-red-500">{{ form.password2.errors|striptags }}</p>
             {% endif %}

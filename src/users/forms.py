@@ -58,13 +58,49 @@ class CustomSignupForm(SignupForm):
     )
 
     def __init__(self, *args, **kwargs):
+        # Récupérer la request depuis kwargs si elle existe
+        request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
-        if hasattr(self, 'request'):
-            # Récupérer l'email depuis les paramètres GET
-            email = self.request.GET.get('email')
-            if email:
-                self.fields['email'].initial = email
-                self.fields['email'].widget.attrs['readonly'] = True
+        
+        if request:
+            # Récupérer le token d'invitation depuis les paramètres GET
+            invitation_token = request.GET.get('invitation')
+            if invitation_token:
+                from organizations.models import Invitation
+                try:
+                    invitation = Invitation.objects.get(token=invitation_token)
+                    if invitation.can_be_accepted():
+                        self.fields['email'].initial = invitation.email
+                        self.fields['email'].widget.attrs['readonly'] = True
+                        # Stocker le token pour l'utiliser dans save()
+                        self._invitation_token = invitation_token
+                        # Stocker dans la session pour les signaux
+                        request.session['invitation_token'] = str(invitation_token)
+                except Invitation.DoesNotExist:
+                    pass
+            else:
+                # Récupérer l'email depuis les paramètres GET (compatibilité)
+                email = request.GET.get('email')
+                if email:
+                    self.fields['email'].initial = email
+                    self.fields['email'].widget.attrs['readonly'] = True
+        
+        # Appliquer les classes CSS à tous les champs
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({
+                'class': 'input'
+            })
+            
+        # Ajouter les placeholders pour les champs de base allauth
+        self.fields['email'].widget.attrs.update({
+            'placeholder': _('Votre email'),
+        })
+        self.fields['password1'].widget.attrs.update({
+            'placeholder': _('Votre mot de passe'),
+        })
+        self.fields['password2'].widget.attrs.update({
+            'placeholder': _('Confirmez votre mot de passe'),
+        })
 
     def save(self, request):
         user = super().save(request)

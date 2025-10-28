@@ -192,3 +192,8 @@ LOGIN_REDIRECT_URL = '/organizations'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_ON_GET = True
+
+COUNTRIES_OVERRIDE = {
+    'IL': 'Palestine',
+    'KS': 'Kosovo',
+}

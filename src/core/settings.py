@@ -194,6 +194,7 @@ LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_ON_GET = True
 
 COUNTRIES_OVERRIDE = {
-    'IL': 'Palestine',
+    'IL': None,
     'KS': 'Kosovo',
+    'EH' : None,
 }

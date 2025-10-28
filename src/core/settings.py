@@ -184,6 +184,9 @@ ACCOUNT_FORMS = {
     'signup': 'users.forms.CustomSignupForm'
 }
 
+# Préserver les paramètres GET lors des redirections
+ACCOUNT_PRESERVE_URL_PARAMETERS = True
+
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/organizations'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'

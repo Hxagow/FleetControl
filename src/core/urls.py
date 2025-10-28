@@ -25,8 +25,8 @@ from users.views import InvitationSignupView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n')),
-    path('accounts/', include('allauth.urls')),
     path('accounts/signup/', InvitationSignupView.as_view(), name='account_signup'),
+    path('accounts/', include('allauth.urls')),
     path('users/', include('users.urls')),
     path('organizations/', include('organizations.urls'))
 ]

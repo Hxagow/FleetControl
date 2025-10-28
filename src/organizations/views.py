@@ -93,6 +93,7 @@ def organization_delete(request, slug):
 
 
 @login_required
+# A CORRIGER
 def invite_user(request, slug):
     org = get_object_or_404(Organization, slug=slug)
     # Vérifier si l'utilisateur est admin de l'organisation

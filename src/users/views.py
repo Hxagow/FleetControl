@@ -33,33 +33,47 @@ class InvitationSignupView(SignupView):
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        # Passer la request au formulaire
         kwargs['request'] = self.request
         return kwargs
     
     def get_initial(self):
         initial = super().get_initial()
-        
-        # Vérifier s'il y a un token d'invitation
-        invitation_token = self.request.GET.get('invitation')
-        if invitation_token:
-            try:
-                invitation = Invitation.objects.get(token=invitation_token)
-                if invitation.can_be_accepted():
-                    initial['email'] = invitation.email
-                    # Stocker le token dans la session
-                    self.request.session['invitation_token'] = str(invitation_token)
-            except Invitation.DoesNotExist:
-                pass
-        
         return initial
     
     def form_valid(self, form):
         # Appeler la méthode parent pour créer l'utilisateur
         response = super().form_valid(form)
         
-        # Le signal user_signed_up va automatiquement gérer l'invitation
-        # grâce au token stocké en session
+        invitation_token = self.request.session.get('invitation_token')
+        if invitation_token:
+            try:
+                invitation = Invitation.objects.get(token=invitation_token)
+                if invitation.can_be_accepted() and invitation.email == form.cleaned_data['email']:
+                    # Créer le membership
+                    Membership.objects.get_or_create(
+                        user=self.user,
+                        organization=invitation.organization,
+                        defaults={'role': 'member'}
+                    )
+                    # Marquer l'invitation comme acceptée
+                    invitation.status = 'accepted'
+                    invitation.responded_at = timezone.now()
+                    invitation.save()
+                    # Supprimer l'invitation
+                    invitation.delete()
+                    messages.success(
+                        self.request,
+                        f'Votre compte a été créé et vous avez rejoint {invitation.organization.name} !'
+                    )
+                    # Nettoyer la session
+                    del self.request.session['invitation_token']
+                else:
+                    messages.error(
+                        self.request,
+                        "L'invitation n'est plus valide ou ne correspond pas à cet email."
+                    )
+            except Invitation.DoesNotExist:
+                messages.warning(self.request, "L'invitation n'a pas été trouvée.")
         
         return response
 

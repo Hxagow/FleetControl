@@ -13,8 +13,6 @@ media/
 staticfiles/
 
 .env
-*.env
-.env.*
 
 .vscode/
 .idea/

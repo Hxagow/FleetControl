@@ -1,8 +1,12 @@
-asgiref==3.8.1
-Django==5.2
-django-countries==7.6.1
-pillow==11.2.1
-psycopg2-binary==2.9.10
-python-decouple==3.8
-sqlparse==0.5.3
-typing_extensions==4.13.2
+Package           Version
+----------------- -------
+asgiref           3.8.1
+Django            5.2
+django-allauth    65.7.0
+django-countries  7.6.1
+pillow            11.2.1
+pip               25.0
+psycopg2-binary   2.9.10
+python-decouple   3.8
+sqlparse          0.5.3
+typing_extensions 4.13.2

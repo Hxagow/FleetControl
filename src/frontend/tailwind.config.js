@@ -2,7 +2,8 @@
 module.exports = {
   content: [
     "./templates/**/*.html",
-    "./static/**/*.js"
+    "./static/**/*.js",
+    "./static/css/input.css"
   ],
   theme: {
     extend: {
@@ -19,4 +20,4 @@ module.exports = {
     'input-error',
     'input-container'
   ]
-} 
+}

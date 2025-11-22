@@ -8,10 +8,6 @@
 @tailwind utilities; 
 
 @layer components {
-    .exemple {
-        @apply
-    }
-
     .title {
         @apply text-4xl text-center text-blue-400;
     }
@@ -48,5 +44,13 @@
         @apply w-full py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent;
         padding-left: 0.75rem;
         padding-right: 0.75rem;
+    }
+
+    .errorlist {
+        @apply text-red-500 text-xs italic mt-1;
+    }
+
+    .errorlist li {
+        @apply list-none;
     }
 }

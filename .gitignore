@@ -21,7 +21,6 @@ staticfiles/
 node_modules/
 package-lock.json
 npm-debug.log
-tailwind.config.js
 postcss.config.js
 
 .DS_Store

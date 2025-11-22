@@ -3,7 +3,7 @@ from django_countries.fields import CountryField
 from django.utils.translation import gettext_lazy as _
 from .models import Organization, Invitation
 from django.core.exceptions import ValidationError
-from .validators import ascii_only_validator
+from .validators import no_emoji_validator
 
 class OrganizationForm(forms.ModelForm):
     # LANGUAGE_CHOICES = [
@@ -33,7 +33,7 @@ class OrganizationForm(forms.ModelForm):
             if value in (None, ''):
                 continue
             try:
-                ascii_only_validator(value)
+                no_emoji_validator(value)
             except ValidationError as e:
 
                 self.add_error(field, e)

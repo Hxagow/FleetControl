@@ -18,6 +18,8 @@ staticfiles/
 .vscode/
 .idea/
 
+output.css
+
 node_modules/
 package-lock.json
 npm-debug.log

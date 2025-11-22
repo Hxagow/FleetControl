@@ -29,7 +29,7 @@
             {% endif %}
             <input type="file" name="logo" id="id_logo" class="input" accept="image/*">
             {% if form.logo.errors %}
-            <p class="text-red-500 text-xs italic">{{ form.logo.errors }}</p>
+            {{ form.logo.errors }}
             {% endif %}
         </div>
 
@@ -37,7 +37,7 @@
             <label for="id_name" class="text-small">{% trans "Nom" %}</label>
             <input type="text" name="name" id="id_name" required class="input" placeholder="{% trans "Nom de l'organisation" %}" value="{{ form.instance.name|default:'' }}">
             {% if form.name.errors %}
-            <p class="text-red-500 text-xs italic">{{ form.name.errors }}</p>
+            {{ form.name.errors }}
             {% endif %}
         </div>
 
@@ -45,7 +45,7 @@
             <label for="id_description" class="text-small">{% trans "Description" %}</label>
             <textarea name="description" id="id_description" class="input" rows="3" placeholder="{% trans "Description de l'organisation" %}">{{ form.instance.description|default:'' }}</textarea>
             {% if form.description.errors %}
-            <p class="text-red-500 text-xs italic">{{ form.description.errors }}</p>
+            {{ form.description.errors }}
             {% endif %}
         </div>
 
@@ -53,7 +53,7 @@
             <label for="id_phone" class="text-small">{% trans "Téléphone" %}</label>
             <input type="tel" name="phone" id="id_phone" class="input" placeholder="{% trans "Numéro de téléphone" %}" value="{{ form.instance.phone|default:'' }}">
             {% if form.phone.errors %}
-            <p class="text-red-500 text-xs italic">{{ form.phone.errors }}</p>
+            {{ form.phone.errors }}
             {% endif %}
         </div>
 
@@ -61,7 +61,7 @@
             <label for="id_address" class="text-small">{% trans "Adresse" %}</label>
             <input type="text" name="address" id="id_address" class="input" placeholder="{% trans "Adresse" %}" value="{{ form.instance.address|default:'' }}">
             {% if form.address.errors %}
-            <p class="text-red-500 text-xs italic">{{ form.address.errors }}</p>
+            {{ form.address.errors }}
             {% endif %}
         </div>
 
@@ -69,7 +69,7 @@
             <label for="id_postal_code" class="text-small">{% trans "Code postal" %}</label>
             <input type="text" name="postal_code" id="id_postal_code" class="input" placeholder="{% trans "Code postal" %}" required value="{{ form.instance.postal_code|default:'' }}">
             {% if form.postal_code.errors %}
-            <p class="text-red-500 text-xs italic">{{ form.postal_code.errors }}</p>
+            {{ form.postal_code.errors }}
             {% endif %}
         </div>
 
@@ -77,7 +77,7 @@
             <label for="id_city" class="text-small">{% trans "Ville" %}</label>
             <input type="text" name="city" id="id_city" class="input" placeholder="{% trans "Ville" %}" value="{{ form.instance.city|default:'' }}">
             {% if form.city.errors %}
-            <p class="text-red-500 text-xs italic">{{ form.city.errors }}</p>
+            {{ form.city.errors }}
             {% endif %}
         </div>
 
@@ -85,7 +85,7 @@
             <label for="id_country" class="text-small">{% trans "Pays" %}</label>
             {{ form.country }}
             {% if form.country.errors %}
-            <p class="text-red-500 text-xs italic">{{ form.country.errors }}</p>
+            {{ form.country.errors }}
             {% endif %}
         </div>
 
@@ -102,7 +102,7 @@
                 {% endfor %}
             </div>
             {% if form.language.errors %}
-            <p class="text-red-500 text-xs italic">{{ form.language.errors }}</p>
+            {{ form.language.errors }}
             {% endif %}
         </div> {% endcomment %}
 

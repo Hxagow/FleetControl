@@ -53,4 +53,20 @@
     .errorlist li {
         @apply list-none;
     }
+
+    .toast {
+        @apply opacity-0 translate-y-2 transition duration-500 ease-in-out;
+    }
+
+    .toast-show {
+        @apply opacity-100 translate-y-0;
+    }
+
+    .toast-hide {
+        @apply opacity-0 -translate-y-1;
+    }
+
+    .toast-close {
+        @apply flex items-center justify-center w-6 h-6 text-lg leading-none font-bold focus:outline-none rounded-full transition-colors;
+    }
 }

@@ -17,7 +17,7 @@ def profile_view(request):
         form = ProfileForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Profil mis à jour avec succès.')
+            messages.success(request, 'Profil mis à jour avec succès.', extra_tags='profile-updated')
             return redirect('users:profile')
     else:
         form = ProfileForm(instance=request.user)

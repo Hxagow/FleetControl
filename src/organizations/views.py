@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.utils import timezone
 from .models import Organization, Invitation
 from .forms import OrganizationForm, InvitationForm
-from users.models import Membership, User
+from users.models import OrganizationUser, User
 from django.contrib import messages
 
 @login_required
@@ -17,7 +17,7 @@ def organization_create(request):
         form = OrganizationForm(request.POST, request.FILES)
         if form.is_valid():
             organization = form.save()
-            Membership.objects.create(
+            OrganizationUser.objects.create(
                 user=request.user,
                 organization=organization,
                 role='admin'
@@ -31,8 +31,8 @@ def organization_create(request):
 @login_required
 def organization_list(request):
     # Récupérer les organisations dont l'utilisateur est membre
-    user_organizations = Organization.objects.filter(memberships__user=request.user)
-    
+    user_organizations = Organization.objects.filter(organization_users__user=request.user)
+
     # Récupérer les invitations en attente pour l'utilisateur
     pending_invitations = Invitation.objects.filter(
         email=request.user.email,
@@ -52,10 +52,10 @@ def organization_list(request):
 def organization_detail(request, slug):
     org = get_object_or_404(Organization, slug=slug)
     # Vérifier si l'utilisateur est membre de l'organisation
-    if not org.memberships.filter(user=request.user).exists():
+    if not org.organization_users.filter(user=request.user).exists():
         raise PermissionDenied("Vous n'êtes pas membre de cette organisation.")
     
-    is_admin = org.memberships.filter(user=request.user, role='admin').exists()
+    is_admin = org.organization_users.filter(user=request.user, role='admin').exists()
     return render(request, 'organizations/organization_detail.html', {
         'organization': org,
         'is_admin': is_admin
@@ -66,7 +66,7 @@ def organization_detail(request, slug):
 def organization_update(request, slug):
     org = get_object_or_404(Organization, slug=slug)
     # Vérifier si l'utilisateur est admin de l'organisation
-    if not org.memberships.filter(user=request.user, role='admin').exists():
+    if not org.organization_users.filter(user=request.user, role='admin').exists():
         raise PermissionDenied("Vous devez être administrateur pour modifier l'organisation.")
     
     if request.method == "POST":
@@ -83,7 +83,7 @@ def organization_update(request, slug):
 def organization_delete(request, slug):
     org = get_object_or_404(Organization, slug=slug)
     # Vérifier si l'utilisateur est admin de l'organisation
-    if not org.memberships.filter(user=request.user, role='admin').exists():
+    if not org.organization_users.filter(user=request.user, role='admin').exists():
         raise PermissionDenied("Vous devez être administrateur pour supprimer l'organisation.")
     
     if request.method == "POST":
@@ -97,7 +97,7 @@ def organization_delete(request, slug):
 def invite_user(request, slug):
     org = get_object_or_404(Organization, slug=slug)
     # Vérifier si l'utilisateur est admin de l'organisation
-    if not org.memberships.filter(user=request.user, role='admin').exists():
+    if not org.organization_users.filter(user=request.user, role='admin').exists():
         raise PermissionDenied("Vous devez être administrateur pour inviter des utilisateurs.")
     
     if request.method == "POST":
@@ -115,7 +115,7 @@ def invite_user(request, slug):
             try:
                 existing_user = User.objects.get(email=email)
                 # Vérifier s'il est déjà membre
-                if org.memberships.filter(user=existing_user).exists():
+                if org.organization_users.filter(user=existing_user).exists():
                     messages.error(request, "Cet utilisateur est déjà membre de l'organisation.")
                     return redirect('organization_detail', slug=slug)
                     
@@ -165,11 +165,11 @@ def invite_user(request, slug):
 def organization_members(request, slug):
     org = get_object_or_404(Organization, slug=slug)
     # Vérifier si l'utilisateur est admin de l'organisation
-    if not org.memberships.filter(user=request.user, role='admin').exists():
+    if not org.organization_users.filter(user=request.user, role='admin').exists():
         raise PermissionDenied("Vous devez être administrateur pour gérer les membres.")
     
     # Récupérer les membres et invitations
-    members = org.memberships.all().select_related('user').order_by('role', 'user__first_name', 'user__email')
+    members = org.organization_users.all().select_related('user').order_by('role', 'user__first_name', 'user__email')
     invitations = org.invitations.all().select_related('invited_by').order_by('-created_at')
     
     return render(request, 'organizations/members_management.html', {
@@ -183,13 +183,13 @@ def organization_members(request, slug):
 def remove_member(request, slug, member_id):
     org = get_object_or_404(Organization, slug=slug)
     # Vérifier si l'utilisateur est admin de l'organisation
-    if not org.memberships.filter(user=request.user, role='admin').exists():
+    if not org.organization_users.filter(user=request.user, role='admin').exists():
         raise PermissionDenied("Vous devez être administrateur pour supprimer des membres.")
     
-    member = get_object_or_404(Membership, id=member_id, organization=org)
-    
+    member = get_object_or_404(OrganizationUser, id=member_id, organization=org)
+
     # Empêcher la suppression du dernier admin
-    admin_count = org.memberships.filter(role='admin').count()
+    admin_count = org.organization_users.filter(role='admin').count()
     if member.role == 'admin' and admin_count <= 1:
         messages.error(request, "Impossible de supprimer le dernier administrateur de l'organisation.")
         return redirect('organization_members', slug=slug)
@@ -216,10 +216,10 @@ def remove_member(request, slug, member_id):
 def change_member_role(request, slug, member_id):
     org = get_object_or_404(Organization, slug=slug)
     # Vérifier si l'utilisateur est admin de l'organisation
-    if not org.memberships.filter(user=request.user, role='admin').exists():
+    if not org.organization_users.filter(user=request.user, role='admin').exists():
         raise PermissionDenied("Vous devez être administrateur pour modifier les rôles.")
     
-    member = get_object_or_404(Membership, id=member_id, organization=org)
+    member = get_object_or_404(OrganizationUser, id=member_id, organization=org)
     new_role = request.POST.get('role')
     
     if new_role not in ['admin', 'member']:
@@ -232,7 +232,7 @@ def change_member_role(request, slug, member_id):
         return redirect('organization_members', slug=slug)
     
     # Empêcher la rétrogradation du dernier admin
-    admin_count = org.memberships.filter(role='admin').count()
+    admin_count = org.organization_users.filter(role='admin').count()
     if member.role == 'admin' and new_role == 'member' and admin_count <= 1:
         messages.error(request, "Impossible de rétrograder le dernier administrateur.")
         return redirect('organization_members', slug=slug)
@@ -250,7 +250,7 @@ def change_member_role(request, slug, member_id):
 def cancel_invitation(request, slug, invitation_id):
     org = get_object_or_404(Organization, slug=slug)
     # Vérifier si l'utilisateur est admin de l'organisation
-    if not org.memberships.filter(user=request.user, role='admin').exists():
+    if not org.organization_users.filter(user=request.user, role='admin').exists():
         raise PermissionDenied("Vous devez être administrateur pour annuler des invitations.")
     
     invitation = get_object_or_404(Invitation, id=invitation_id, organization=org)
@@ -270,13 +270,13 @@ def leave_organization(request, slug):
     
     # Vérifier si l'utilisateur est membre de l'organisation
     try:
-        membership = org.memberships.get(user=request.user)
-    except Membership.DoesNotExist:
+        membership = org.organization_users.get(user=request.user)
+    except OrganizationUser.DoesNotExist:
         messages.error(request, "Vous n'êtes pas membre de cette organisation.")
         return redirect('organizations_panel')
     
     # Empêcher le dernier admin de quitter
-    admin_count = org.memberships.filter(role='admin').count()
+    admin_count = org.organization_users.filter(role='admin').count()
     if membership.role == 'admin' and admin_count <= 1:
         messages.error(request, "Vous ne pouvez pas quitter l'organisation car vous êtes le seul administrateur. Promouvez d'abord un autre membre.")
         return redirect('organization_detail', slug=slug)
@@ -285,7 +285,7 @@ def leave_organization(request, slug):
     org_name = org.name
     user_email = request.user.email
     
-    # Supprimer le membership
+    # Supprimer le lien utilisateur ↔ organisation
     membership.delete()
     
     # Supprimer aussi toutes les invitations en attente pour cet email dans cette organisation

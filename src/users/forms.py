@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 
 from organizations.models import Organization
-from .models import Membership
+from .models import OrganizationUser
 
 User = get_user_model()
 

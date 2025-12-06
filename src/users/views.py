@@ -7,7 +7,7 @@ from django.utils import timezone
 from allauth.account.views import SignupView
 from allauth.account.utils import complete_signup
 from organizations.models import Invitation
-from .models import Membership
+from .models import OrganizationUser
 from .forms import ProfileForm, CustomSignupForm
 
 
@@ -49,8 +49,8 @@ class InvitationSignupView(SignupView):
             try:
                 invitation = Invitation.objects.get(token=invitation_token)
                 if invitation.can_be_accepted() and invitation.email == form.cleaned_data['email']:
-                    # Créer le membership
-                    Membership.objects.get_or_create(
+                    # Créer le lien utilisateur ↔ organisation
+                    OrganizationUser.objects.get_or_create(
                         user=self.user,
                         organization=invitation.organization,
                         defaults={'role': 'member'}
@@ -94,8 +94,8 @@ def accept_invitation(request, invitation_id):
     invitation.responded_at = timezone.now()
     invitation.save()
     
-    # Créer le membership
-    Membership.objects.get_or_create(
+    # Créer le lien utilisateur ↔ organisation
+    OrganizationUser.objects.get_or_create(
         user=request.user,
         organization=invitation.organization,
         defaults={'role': 'member'}
@@ -129,6 +129,3 @@ def decline_invitation(request, invitation_id):
     
     messages.info(request, 'Invitation refusée.')
     return redirect('organizations_panel')
-
-
-

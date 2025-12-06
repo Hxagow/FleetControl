@@ -1,7 +1,7 @@
 from django.dispatch import receiver
 from allauth.account.signals import user_signed_up
 from organizations.models import Invitation
-from .models import Membership
+from .models import OrganizationUser
 from django.utils import timezone
 
 
@@ -43,4 +43,4 @@ def handle_user_signed_up(sender, request, user, **kwargs):
                         inv.delete()
                     
         except Invitation.DoesNotExist:
-            pass  # Invitation invalide, ignorer 
+            pass  # Invitation invalide, ignorer

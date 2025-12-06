@@ -42,18 +42,18 @@ class User(AbstractUser):
         return self.email
     
     def get_role(self, organization):
-        membership = self.memberships.filter(organization=organization).first()
-        return membership.role if membership else None
-    
-    
-class Membership(models.Model):
+        organization_user = self.organization_users.filter(organization=organization).first()
+        return organization_user.role if organization_user else None
+
+
+class OrganizationUser(models.Model):
     ROLE_CHOICES = (
         ('admin', 'Admin'),
         ('member', 'Member'),
     )
 
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='memberships')
-    organization = models.ForeignKey('organizations.Organization', on_delete=models.CASCADE, related_name='memberships')
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='organization_users')
+    organization = models.ForeignKey('organizations.Organization', on_delete=models.CASCADE, related_name='organization_users')
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     joined_at = models.DateTimeField(auto_now_add=True)
 
@@ -62,3 +62,12 @@ class Membership(models.Model):
 
     def __str__(self):
         return f"{self.user.email} in {self.organization.name} ({self.role})"
+
+
+class Membership(OrganizationUser):
+    """Deprecated proxy kept temporarily for soft-migration purposes."""
+
+    class Meta:
+        proxy = True
+        verbose_name = _('Deprecated membership')
+        verbose_name_plural = _('Deprecated memberships')

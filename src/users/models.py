@@ -64,10 +64,10 @@ class OrganizationUser(models.Model):
         return f"{self.user.email} in {self.organization.name} ({self.role})"
 
 
-class Membership(OrganizationUser):
-    """Deprecated proxy kept temporarily for soft-migration purposes."""
+# class Membership(OrganizationUser):
+#     """Deprecated proxy kept temporarily for soft-migration purposes."""
 
-    class Meta:
-        proxy = True
-        verbose_name = _('Deprecated membership')
-        verbose_name_plural = _('Deprecated memberships')
+#     class Meta:
+#         proxy = True
+#         verbose_name = _('Deprecated membership')
+#         verbose_name_plural = _('Deprecated memberships')

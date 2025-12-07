@@ -5,6 +5,8 @@ from django_countries.fields import CountryField
 import uuid
 from datetime import timedelta
 from django.utils import timezone
+from src.users.models import OrganizationUser
+
 
 class Organization(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -73,6 +75,7 @@ class Invitation(models.Model):
     invited_by = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='sent_invitations')
     token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    role = models.CharField(max_length=10, choices=OrganizationUser.ROLE_CHOICES, default='member',)
     
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField()

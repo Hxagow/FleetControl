@@ -31,6 +31,18 @@
                 </p>
             </div>
 
+            <div class="mt-4">
+                <label for="{{form.role.id_for_label}}" class="block text-sm font-medium text-gray-700">
+                    {% trans "Rôle" %}
+                </label>
+                {{ form.role }}
+                {% if form.role.errors %}
+                <p class="text-red-500 text-sm">
+                    {{form.role.errors.0}}
+                </p>
+                {% endif %}
+            </div>
+
             <div class="flex space-x-4">
                 <button type="submit" class="button-base flex-1">
                     {% trans "Envoyer l'invitation" %}

@@ -104,6 +104,7 @@ def invite_user(request, slug):
         form = InvitationForm(request.POST, organization=org)
         if form.is_valid():
             email = form.cleaned_data['email']
+            role = form.cleaned_data['role'] # Ajout du rôle depuis le formulaire
             
             # Nettoyer les invitations expirées pour cet email dans cette organisation
             expired_invitations = Invitation.objects.filter(email=email, organization=org)
@@ -120,7 +121,7 @@ def invite_user(request, slug):
                     return redirect('organization_detail', slug=slug)
                     
                 # Créer l'invitation pour un utilisateur existant
-                invitation = Invitation.objects.create(email=email, organization=org, invited_by=request.user)
+                invitation = Invitation.objects.create(email=email, organization=org, invited_by=request.user, role=role)
                 
                 # Envoyer email d'information (l'utilisateur verra l'invitation dans ses notifications)
                 subject = f"Invitation à rejoindre {org.name}"
@@ -132,7 +133,7 @@ def invite_user(request, slug):
                 
             except User.DoesNotExist:
                 # Créer l'invitation pour un nouvel utilisateur
-                invitation = Invitation.objects.create(email=email, organization=org, invited_by=request.user)
+                invitation = Invitation.objects.create(email=email, organization=org, invited_by=request.user, role=role)
                 
                 # Envoyer email avec lien d'inscription
                 signup_url = request.build_absolute_uri(
@@ -149,7 +150,7 @@ def invite_user(request, slug):
                 
                 send_mail(subject,message, settings.DEFAULT_FROM_EMAIL, [email], html_message=message)
                 
-                messages.success(request, f"Invitation envoyée à {email}")
+                messages.success(request, f"Invitation envoyée à {email} en tant que {role}")
             
             return redirect('organization_detail', slug=slug)
     else:

@@ -1,6 +1,8 @@
 from django import forms
 from django_countries.fields import CountryField
 from django.utils.translation import gettext_lazy as _
+
+from users.models import OrganizationUser
 from .models import Organization, Invitation
 from django.core.exceptions import ValidationError
 from .validators import no_emoji_validator
@@ -48,6 +50,13 @@ class InvitationForm(forms.Form):
             'placeholder': _('email@exemple.com'),
             'class': 'input'
         })
+    )
+
+    # Champ rôle permettant de définir le rôle de l'utilisateur dès son invitation
+    role = forms.ChoiceField(
+        label=_('Role'),
+        choices=OrganizationUser.ROLE_CHOICES,
+        widget=forms.Select(attrs={'class': 'input'})
     )
 
     def __init__(self, *args, **kwargs):

@@ -50,21 +50,30 @@ class InvitationSignupView(SignupView):
                 invitation = Invitation.objects.get(token=invitation_token)
                 if invitation.can_be_accepted() and invitation.email == form.cleaned_data['email']:
                     # Créer le lien utilisateur ↔ organisation
-                    OrganizationUser.objects.get_or_create(
+                    role=invitation.role
+
+                    org_user, created = OrganizationUser.objects.get_or_create(
                         user=self.user,
                         organization=invitation.organization,
-                        defaults={'role': 'member'}
+                        defaults={'role': role},
                     )
+                    # MAJ du rôle au cas où un lien existerait déjà
+                    if not created and org_user.role != role:
+                        org_user.role = role
+                        org_user.save()
+
                     # Marquer l'invitation comme acceptée
                     invitation.status = 'accepted'
                     invitation.responded_at = timezone.now()
                     invitation.save()
+
                     # Supprimer l'invitation
                     invitation.delete()
                     messages.success(
                         self.request,
                         f'Votre compte a été créé et vous avez rejoint {invitation.organization.name} !'
                     )
+
                     # Nettoyer la session
                     del self.request.session['invitation_token']
                 else:
@@ -95,11 +104,17 @@ def accept_invitation(request, invitation_id):
     invitation.save()
     
     # Créer le lien utilisateur ↔ organisation
-    OrganizationUser.objects.get_or_create(
+    role = invitation.role
+
+    org_user, created = OrganizationUser.objects.get_or_create(
         user=request.user,
         organization=invitation.organization,
-        defaults={'role': 'member'}
+        defaults={'role': role},
     )
+
+    if not created and org_user.role != role:
+        org_user.role = role
+        org_user.save()
     
     # Supprimer l'invitation maintenant qu'elle est traitée
     invitation.delete()

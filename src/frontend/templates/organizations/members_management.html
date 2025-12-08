@@ -70,7 +70,7 @@
                                     {% trans "Administrateur" %}
                                 </span>
                             {% else %}
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                                     {% trans "Membre" %}
                                 </span>
                             {% endif %}
@@ -177,7 +177,7 @@
                                     {% trans "Administrateur" %}
                                 </span>
                             {% else %}
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                                     {% trans "Membre" %}
                                 </span>
                             {% endif %}
@@ -188,7 +188,7 @@
                                     {% trans "Expirée" %}
                                 </span>
                             {% elif invitation.status == 'pending' %}
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
                                     {% trans "En attente" %}
                                 </span>
                             {% elif invitation.status == 'accepted' %}
@@ -210,7 +210,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             {% if invitation.status == 'pending' and not invitation.is_expired %}
                             <a href="{% url 'cancel_invitation' organization.slug invitation.id %}" 
-                               class="text-red-600 hover:text-red-900 text-xs px-2 py-1 border border-red-600 rounded"
+                               class="text-gray-600 hover:text-gray-900 text-xs px-2 py-1 border border-gray-600 rounded"
                                onclick="return confirm('{% trans "Êtes-vous sûr de vouloir annuler cette invitation ?" %}')">
                                 {% trans "Annuler" %}
                             </a>

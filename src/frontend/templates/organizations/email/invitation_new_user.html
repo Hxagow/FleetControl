@@ -16,7 +16,11 @@
         <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
             <p>Bonjour,</p>
             <p><strong>{{ invited_by.first_name|default:invited_by.email }}</strong> vous invite à rejoindre l'organisation <strong>{{ organization.name }}</strong>.</p>
-            
+
+            <p style="margin-top: 10px;">
+                <strong>Rôle attribué :</strong> {{ invitation.get_role_display }}.
+            </p>
+
             {% if organization.description %}
             <p style="margin-top: 20px; padding: 15px; background-color: #e5e7eb; border-radius: 6px;">
                 {{ organization.description }}

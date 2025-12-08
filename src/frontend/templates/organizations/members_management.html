@@ -215,6 +215,13 @@
                                 {% trans "Annuler" %}
                             </a>
                             {% endif %}
+                            {% if invitation.status != 'pending' or invitation.is_expired %}
+                            <a href="{% url 'delete_invitation' organization.slug invitation.id %}"
+                               class="text-red-600 hover:text-red-900 text-xs px-2 py-1 border border-red-600 rounded"
+                               onclick="return confirm('{% trans "Supprimer définitivement cette invitation de l’historique ?" %}')">
+                            {% trans "Supprimer" %}
+                            </a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

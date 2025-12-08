@@ -264,6 +264,26 @@ def cancel_invitation(request, slug, invitation_id):
     messages.success(request, f"Invitation pour {invitation.email} annulée.")
     return redirect('organization_members', slug=slug)
 
+# Supprimer une invitation des "Invitations en attente"
+@login_required()
+def delete_invitation(request, slug, invitation_id):
+    org = get_object_or_404(Organization, slug=slug)
+    # Permettre la suppression uniquement aux administrateurs
+    if not org.organization_users.filter(user=request.user, role='admin').exists():
+        raise PermissionDenied("Vous devez être administrateur pour supprimer des invitations.")
+
+    invitation = get_object_or_404(Invitation, id=invitation_id, organization=org)
+
+    email = invitation.email
+    status_label = invitation.get_status_display()
+
+    invitation.delete()
+    messages.success(
+        request,
+        f"Invitation ({status_label}) pour {email} supprimée de l'historique."
+    )
+    return redirect('organization_members', slug=slug)
+
 
 @login_required
 def leave_organization(request, slug):

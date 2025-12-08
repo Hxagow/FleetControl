@@ -20,5 +20,7 @@ urlpatterns = [
     path('<slug:slug>/members/<int:member_id>/remove/', views.remove_member, name='remove_member'),
     path('<slug:slug>/members/<int:member_id>/role/', views.change_member_role, name='change_member_role'),
     path('<slug:slug>/invitations/<int:invitation_id>/cancel/', views.cancel_invitation, name='cancel_invitation'),
+    path('<slug:slug>/invitations/<int:invitation_id>/cancel/', views.cancel_invitation, name='cancel_invitation'),
+    path('<slug:slug>/invitations/<int:invitation_id>/delete/', views.delete_invitation, name='delete_invitation'),
     path('<slug:slug>/leave/', views.leave_organization, name='leave_organization'),
 ]

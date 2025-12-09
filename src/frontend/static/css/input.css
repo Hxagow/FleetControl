@@ -69,4 +69,16 @@
     .toast-close {
         @apply flex items-center justify-center w-6 h-6 text-lg leading-none font-bold focus:outline-none rounded-full transition-colors;
     }
+
+    .actions-column {
+        @apply flex flex-col gap-2 w-32 items-stretch;
+    }
+
+    .actions-column form {
+        @apply w-full;
+    }
+
+    .action-button {
+        @apply flex items-center justify-center w-full text-center px-3 py-1.5 text-xs font-medium rounded border;
+    }
 }

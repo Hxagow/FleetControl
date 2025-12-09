@@ -79,47 +79,43 @@
                             {{ member.joined_at|date:"d/m/Y" }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex space-x-2">
-                                <!-- Changer le rôle -->
+                            <div class="actions-column">
                                 {% if member.user != user %}
-                                    <!-- Autre utilisateur : toujours autorisé -->
-                                    <form method="post" action="{% url 'change_member_role' organization.slug member.id %}" class="inline">
+                                    <form method="post" action="{% url 'change_member_role' organization.slug member.id %}">
                                         {% csrf_token %}
                                         {% if member.role == 'admin' %}
                                             <input type="hidden" name="role" value="member">
-                                            <button type="submit" class="text-orange-600 hover:text-orange-900 text-xs px-2 py-1 border border-orange-600 rounded">
+                                            <button type="submit" class="action-button text-orange-600 border-orange-600 hover:text-orange-900 hover:border-orange-900">
                                                 {% trans "Rétrograder" %}
                                             </button>
                                         {% else %}
                                             <input type="hidden" name="role" value="admin">
-                                            <button type="submit" class="text-blue-600 hover:text-blue-900 text-xs px-2 py-1 border border-blue-600 rounded">
+                                            <button type="submit" class="action-button text-blue-600 border-blue-600 hover:text-blue-900 hover:border-blue-900">
                                                 {% trans "Promouvoir" %}
                                             </button>
                                         {% endif %}
                                     </form>
                                 {% else %}
-                                    <!-- Utilisateur lui-même : seulement s'il peut se promouvoir (pas admin) -->
                                     {% if member.role != 'admin' %}
-                                        <form method="post" action="{% url 'change_member_role' organization.slug member.id %}" class="inline">
+                                        <form method="post" action="{% url 'change_member_role' organization.slug member.id %}">
                                             {% csrf_token %}
                                             <input type="hidden" name="role" value="admin">
-                                            <button type="submit" class="text-blue-600 hover:text-blue-900 text-xs px-2 py-1 border border-blue-600 rounded">
+                                            <button type="submit" class="action-button text-blue-600 border-blue-600 hover:text-blue-900 hover:border-blue-900">
                                                 {% trans "Promouvoir" %}
                                             </button>
                                         </form>
                                     {% endif %}
                                 {% endif %}
-                                
-                                <!-- Supprimer le membre -->
+
                                 {% if member.user != user %}
-                                    <a href="{% url 'remove_member' organization.slug member.id %}" 
-                                       class="text-red-600 hover:text-red-900 text-xs px-2 py-1 border border-red-600 rounded"
+                                    <a href="{% url 'remove_member' organization.slug member.id %}"
+                                       class="action-button text-red-600 border-red-600 hover:text-red-900 hover:border-red-900"
                                        onclick="return confirm('{% trans "Êtes-vous sûr de vouloir retirer ce membre ?" %}')">
                                         {% trans "Retirer" %}
                                     </a>
                                 {% endif %}
                             </div>
-                        </td>
+                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -208,21 +204,23 @@
                             {{ invitation.created_at|date:"d/m/Y H:i" }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            {% if invitation.status == 'pending' and not invitation.is_expired %}
-                            <a href="{% url 'cancel_invitation' organization.slug invitation.id %}" 
-                               class="text-gray-600 hover:text-gray-900 text-xs px-2 py-1 border border-gray-600 rounded"
-                               onclick="return confirm('{% trans "Êtes-vous sûr de vouloir annuler cette invitation ?" %}')">
-                                {% trans "Annuler" %}
-                            </a>
-                            {% endif %}
-                            {% if invitation.status != 'pending' or invitation.is_expired %}
-                            <a href="{% url 'delete_invitation' organization.slug invitation.id %}"
-                               class="text-red-600 hover:text-red-900 text-xs px-2 py-1 border border-red-600 rounded"
-                               onclick="return confirm('{% trans "Supprimer définitivement cette invitation de l’historique ?" %}')">
-                            {% trans "Supprimer" %}
-                            </a>
-                            {% endif %}
-                        </td>
+                            <div class="actions-column">
+                                {% if invitation.status == 'pending' and not invitation.is_expired %}
+                                <a href="{% url 'cancel_invitation' organization.slug invitation.id %}"
+                                   class="action-button text-gray-600 border-gray-600 hover:text-gray-900 hover:border-gray-900"
+                                   onclick="return confirm('{% trans "Êtes-vous sûr de vouloir annuler cette invitation ?" %}')">
+                                    {% trans "Annuler" %}
+                                </a>
+                                {% endif %}
+                                {% if invitation.status != 'pending' or invitation.is_expired %}
+                                <a href="{% url 'delete_invitation' organization.slug invitation.id %}"
+                                   class="action-button text-red-600 border-red-600 hover:text-red-900 hover:border-red-900"
+                                   onclick="return confirm('{% trans "Supprimer définitivement cette invitation de l’historique ?" %}')">
+                                {% trans "Supprimer" %}
+                                </a>
+                                {% endif %}
+                            </div>
+                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -244,4 +242,4 @@
         </a>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}

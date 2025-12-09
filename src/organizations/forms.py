@@ -56,7 +56,7 @@ class InvitationForm(forms.Form):
     role = forms.ChoiceField(
         label=_('Role'),
         choices=OrganizationUser.ROLE_CHOICES,
-        widget=forms.Select(attrs={'class': 'input'})
+        widget=forms.Select(attrs={'class': 'input bg-white'})
     )
 
     def __init__(self, *args, **kwargs):

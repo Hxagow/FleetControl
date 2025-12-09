@@ -3,7 +3,8 @@ from django.utils import timezone
 
 
 class Vehicle(models.Model):
-    registration_number = models.CharField(max_length=20, unique=True)
+    vehicle_identification_number = models.CharField(max_length=20, unique=True, help_text="VIN")
+    license_plate = models.CharField(max_length=20, unique=True)
     brand = models.CharField(max_length=50)
     model = models.CharField(max_length=50)
     

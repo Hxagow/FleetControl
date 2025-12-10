@@ -12,8 +12,15 @@
         <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4 shadow-sm">
             <div class="flex items-center justify-between">
                 <div class="flex-1">
-                    <h3 class="text-sm font-medium text-blue-900 mb-1">
-                        {% trans "Invitation à rejoindre" %} {{ invitation.organization.name }}
+                    <h3 class="text-sm font-medium mb-1">
+                        <span class="text-blue-900">{% trans "Invitation à rejoindre" %}</span>
+                        <span class="text-blue-900 font-extrabold">{{ invitation.organization.name }}</span>
+                        <!-- Affichage du rôle avec accord (que/qu') -->
+                        {% if invitation.role == 'admin' %}
+                        <span class="text-blue-900">{% trans "en tant qu'" %}</span><span class="text-blue-900 font-extrabold">{{ invitation.get_role_display|lower }}</span>
+                        {% else %}
+                        <span class="text-blue-900">{% trans "en tant que" %}</span> <span class="text-blue-900 font-extrabold">{{ invitation.get_role_display|lower }}</span>
+                        {% endif %}
                     </h3>
                     <p class="text-xs text-blue-700">
                         {% trans "Invité par" %} {{ invitation.invited_by.first_name|default:invitation.invited_by.email }}

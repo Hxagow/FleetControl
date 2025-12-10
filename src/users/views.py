@@ -50,17 +50,13 @@ class InvitationSignupView(SignupView):
                 invitation = Invitation.objects.get(token=invitation_token)
                 if invitation.can_be_accepted() and invitation.email == form.cleaned_data['email']:
                     # Créer le lien utilisateur ↔ organisation
-                    role=invitation.role
+                    role = invitation.role
 
                     org_user, created = OrganizationUser.objects.get_or_create(
                         user=self.user,
                         organization=invitation.organization,
                         defaults={'role': role},
                     )
-                    # MAJ du rôle au cas où un lien existerait déjà
-                    if not created and org_user.role != role:
-                        org_user.role = role
-                        org_user.save()
 
                     # Marquer l'invitation comme acceptée
                     invitation.status = 'accepted'
@@ -111,10 +107,6 @@ def accept_invitation(request, invitation_id):
         organization=invitation.organization,
         defaults={'role': role},
     )
-
-    if not created and org_user.role != role:
-        org_user.role = role
-        org_user.save()
     
     # Supprimer l'invitation maintenant qu'elle est traitée
     invitation.delete()

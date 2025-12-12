@@ -71,7 +71,7 @@
     }
 
     .actions-column {
-        @apply flex flex-col gap-2 w-32 items-stretch;
+        @apply flex flex-col gap-2 items-center text-center;
     }
 
     .actions-column form {

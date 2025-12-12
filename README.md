@@ -1,4 +1,5 @@
 # FleetControl
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/Hxagow/FleetControl?sort=semver&logo=github)
 
 ## Installation
 
